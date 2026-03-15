@@ -15,8 +15,8 @@ Translate a requirement into a complete, confirmed `manuscript.md` and register 
 
 Read the available roles and backgrounds so casting decisions are grounded in what actually exists:
 
-- Glob both `~/.claude/slated/roles/role-*.md` (global) and `.claude/slated/roles/role-*.md` (project) — merge, with project-level taking precedence; read each to understand available roles and their expertise
-- Glob both `~/.claude/slated/backgrounds/background-*.md` (global) and `.claude/slated/backgrounds/background-*.md` (project) — merge, with project-level taking precedence; read each in full; background content determines relevance, not just name
+- Use Bash (`ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`) to list global roles, and Glob `.claude/slated/roles/role-*.md` for project-level ones — merge both results, with project-level taking precedence; read each to understand available roles and their expertise
+- Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; read each in full; background content determines relevance, not just name
 - Read `.claude/slated/scenes/storyboard.md` — understand what scenes already exist to avoid duplication
 
 ---

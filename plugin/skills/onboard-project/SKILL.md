@@ -13,8 +13,8 @@ Bring an existing project into the Slated framework by reading what is already t
 
 ## Pre-work
 
-1. Glob both `~/.claude/slated/backgrounds/background-*.md` (global) and `.claude/slated/backgrounds/background-*.md` (project) — merge the two sets, with project-level files taking precedence over global ones with the same name. Read each in full. This is the catalogue of existing knowledge the skill will cross-reference during the scan — know what is already covered before assessing gaps.
-2. Glob both `~/.claude/slated/roles/role-*.md` (global) and `.claude/slated/roles/role-*.md` (project) — merge, with project-level taking precedence. Note which roles are defined. These inform the cast role suggestion step.
+1. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level files taking precedence over global ones with the same name. Read each in full. This is the catalogue of existing knowledge the skill will cross-reference during the scan — know what is already covered before assessing gaps.
+2. Use Bash (`ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`) to list global roles, and Glob `.claude/slated/roles/role-*.md` for project-level ones — merge both results, with project-level taking precedence. Note which roles are defined. These inform the cast role suggestion step.
 3. If `$ARGUMENTS` specifies a project root other than the CWD, use that path for all file reads in the process below.
 
 ---

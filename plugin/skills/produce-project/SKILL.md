@@ -13,8 +13,8 @@ Gate a new project for production readiness. The producer interviews the user to
 
 ## Pre-work
 
-1. Glob both `~/.claude/slated/backgrounds/background-*.md` (global) and `.claude/slated/backgrounds/background-*.md` (project) — read each in full. Merge the two sets, with project-level files taking precedence over global ones with the same name. These are the only source of truth for scaffold decisions; know what is available before the interview begins.
-2. Glob both `~/.claude/slated/roles/role-*.md` (global) and `.claude/slated/roles/role-*.md` (project) — merge, with project-level files taking precedence. Note which roles are defined.
+1. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — read each in full. Merge both results, with project-level files taking precedence over global ones with the same name. These are the only source of truth for scaffold decisions; know what is available before the interview begins.
+2. Use Bash (`ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`) to list global roles, and Glob `.claude/slated/roles/role-*.md` for project-level ones — merge both results, with project-level files taking precedence. Note which roles are defined.
 3. Use `$ARGUMENTS` as a starting point if provided
 
 ---

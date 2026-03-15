@@ -13,7 +13,7 @@ Define a new background document from scratch through a structured interview. A 
 
 ## Pre-work
 
-1. Glob both `~/.claude/slated/backgrounds/background-*.md` (global) and `.claude/slated/backgrounds/background-*.md` (project) — merge, with project-level taking precedence; read each in full to understand what is already documented and where its edges are
+1. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; read each in full to understand what is already documented and where its edges are
 2. If `$ARGUMENTS` describes a domain that an existing background already covers, surface this to the user — ask whether extending the existing background is preferable to creating a new one
 
 Only proceed with a new background once the domain is confirmed as genuinely uncovered or sufficiently distinct.

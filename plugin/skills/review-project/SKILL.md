@@ -23,7 +23,7 @@ Conduct post-production QA across the entire project. The producer determines wh
    Scenes: <N> reviewed ✓
    ```
 5. Confirm the application is running locally — the interactive track requires a live app; if it is not running, surface this and wait before proceeding
-6. Glob both `~/.claude/slated/backgrounds/background-*.md` (global) and `.claude/slated/backgrounds/background-*.md` (project) — merge, with project-level taking precedence; hold all available for convention checks across all reviews
+6. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; hold all available for convention checks across all reviews
 
 ---
 

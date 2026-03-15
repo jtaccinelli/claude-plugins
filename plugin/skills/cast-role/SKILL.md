@@ -13,7 +13,7 @@ Define a new role from scratch through a structured interview. Every section of 
 
 ## Pre-work
 
-1. Glob both `~/.claude/slated/roles/role-*.md` (global) and `.claude/slated/roles/role-*.md` (project) — merge, with project-level taking precedence; read each in full to understand what roles already exist, what they cover, and where their edges are
+1. Use Bash (`ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`) to list global roles, and Glob `.claude/slated/roles/role-*.md` for project-level ones — merge both results, with project-level taking precedence; read each in full to understand what roles already exist, what they cover, and where their edges are
 2. If `$ARGUMENTS` describes a need that an existing role could plausibly cover, surface this to the user before proceeding — ask whether refining the existing role via `/refine-role` is preferable to defining a new one
 
 Only proceed with a new definition once the user has confirmed the need is genuinely distinct from existing roles.
