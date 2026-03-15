@@ -1,0 +1,15 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "jtaccinelli-slated",
+  "owner": {
+    "name": "Jordan Accinelli",
+    "url": "https://jtaccinelli.com.au"
+  },
+  "plugins": [
+    {
+      "name": "slated",
+      "source": "./plugin",
+      "description": "Film-production-inspired agentic coordination framework for Claude Code"
+    }
+  ]
+}
