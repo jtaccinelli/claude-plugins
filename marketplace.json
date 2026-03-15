@@ -1,0 +1,26 @@
+{
+  "name": "slated",
+  "owner": {
+    "name": "Jordan Accinelli",
+    "email": "info@jtaccinelli.com.au"
+  },
+  "metadata": {
+    "description": "Film-production-inspired agentic coordination framework for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "slated",
+      "source": "./plugin",
+      "description": "Film-production-inspired agentic coordination framework for Claude Code. Provides crew roles, skills, and the actor agent for structured, scene-based delivery.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Jordan Accinelli",
+        "email": "info@jtaccinelli.com.au"
+      },
+      "license": "MIT",
+      "keywords": ["agentic", "coordination", "workflow", "roles", "scenes"],
+      "category": "productivity"
+    }
+  ]
+}
