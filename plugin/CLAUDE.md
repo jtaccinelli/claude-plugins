@@ -95,11 +95,13 @@ Cast roles are project-specific and are not bundled with the framework. They mus
 |---|---|---|
 | `/init` | `casting-director` | Bootstrap global framework directories (`~/.claude/slated/roles/`, `~/.claude/slated/backgrounds/`) on a new device |
 | `/produce-project` | `producer` | Gate production readiness — verify backgrounds and roles, author the set outline, scaffold project directories |
+| `/onboard-project` | `casting-director` | Bring an existing project into the framework — scan the codebase, draft backgrounds from discovered patterns, define cast roles through interview, and author a retroactive set outline |
 | `/build-set` | `set-designer` | Build the project scaffold from the set outline |
 | `/write-scene` | `writer` | Plan a new scene — manuscript, cast, objectives, storyboard entry |
 | `/shoot-take` | `director` | Execute one take and return a verdict |
 | `/shoot-scene` | `director` | Execute all takes automatically, then finalise |
 | `/wrap-scene` | `director` | Close out a passing scene — Completion Record, wrap.md, storyboard |
+| `/check-continuity` | `visualiser` | Log an out-of-band codebase change into the storyboard as a Recorded entry, and flag whether it warrants a set outline update |
 | `/review-project` | `producer` | Post-production QA — review the set build and all unreviewed scenes; produce a project report |
 | `/cast-role` | `casting-director` | Define a new role through a structured interview |
 | `/refine-role` | `casting-director` | Adjust an existing role through targeted interview |
