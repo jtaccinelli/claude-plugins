@@ -1,0 +1,180 @@
+---
+name: shoot-take
+description: Execute one take of a scene — dispatch actors, review output, write the take file, and return a pass or fail verdict. Stops after each take and returns control to the user.
+expected-role: director
+argument-hint: [scene name]
+---
+
+# Shoot Take
+
+Execute one take of a scene. Dispatch actors per the manuscript cast, review all output against the objectives and role definitions, commission a writer review of manuscript fidelity, write the take file, and return a verdict. If the take fails, stop and surface the next-take instructions to the user.
+
+---
+
+## Pre-work
+
+1. Resolve the scene from `$ARGUMENTS` — find `.claude/slated/scenes/scene-<name>/manuscript.md`
+2. Read the manuscript in full — cast, resources, objectives, and all shots
+3. Read each role file referenced in the cast — check `.claude/slated/roles/role-<name>.md` first (project-specific), then `~/.claude/slated/roles/role-<name>.md` (global); use whichever is found first
+4. Read each background file referenced in the cast — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific), then `~/.claude/slated/backgrounds/background-<name>.md` (global); use whichever is found first
+5. Determine the take number — glob `.claude/slated/scenes/scene-<name>/takes/take-*.md`, count existing files, next take is that count + 1 (zero-padded to three digits: `001`, `002`, etc.)
+6. Check for `.claude/slated/scenes/scene-<name>/review.md` — read it in full if it exists; its findings must inform the director's review this take
+7. Confirm the manuscript status is `confirmed` or `in-progress` — if neither, stop and report that the scene is not ready to shoot
+
+---
+
+## Process
+
+### Step 1 — Update manuscript status
+
+Set the manuscript `**Status**` field to `in-progress` if it is not already. If the status was `confirmed` (i.e., this is the first take), dispatch the visualiser to update the scene's entry in the storyboard Pending section from `confirmed` to `in-progress`:
+
+- Pass `--role visualiser` as arguments
+- Include in the agent prompt:
+  - The path to `.claude/slated/scenes/storyboard.md`
+  - The scene name
+  - Instructions to update the status column for `scene-<name>` in the Pending section from `confirmed` to `in-progress`
+
+Wait for the visualiser to complete before proceeding.
+
+### Step 2 — Dispatch actors
+
+For each actor in the Cast table, spawn a sub-agent using the actor agent:
+
+- Pass `--role <role-name> --backgrounds <bg1,bg2,...>` as arguments
+- Include in the agent prompt:
+  - The full manuscript objectives
+  - The specific shot(s) assigned to this actor, verbatim from the manuscript
+  - The path to the scene directory so the actor can read/write files relative to it
+  - If a previous take exists, the path to the most recent take file — instruct the actor to read it in full before beginning, paying particular attention to their own Director's Notes and the Next Take Instructions
+
+Dispatch shots sequentially by default. A shot is independent only if none of its actions reference the output of another shot in this take as a prerequisite — check the manuscript explicitly before deciding. If a shot is independent, it may be dispatched in parallel with others. If any dependency exists, the dependent shot must wait until the shot it depends on has completed.
+
+Wait for all actors to complete before proceeding.
+
+### Step 3 — Commission writer review
+
+Spawn a writer actor to assess manuscript fidelity:
+
+- Pass `--role writer` as arguments
+- Instruct the writer to:
+  1. Read the manuscript
+  2. Read all output produced by the actors in this take
+  3. Assess whether each action in each shot was followed, skipped, or deviated from
+  4. Identify any part of the manuscript that proved unclear, incorrect, or missing information that caused deviation
+  5. Return a structured Writer's Notes report using this format:
+
+```
+**Manuscript fidelity**:
+- <action ref>: followed | deviated | skipped — <brief note if not followed>
+
+**Manuscript issues**:
+- <issue> → <proposed correction>
+```
+
+Wait for the writer to complete before proceeding.
+
+### Step 4 — Review output as director
+
+Review all actor output against:
+
+1. **Objectives** — is each objective in the manuscript met? Treat each as pass or fail.
+2. **Role definitions** — did each actor operate within their role's behavioral parameters and constraints?
+3. **Background conventions** — did each actor apply the conventions from their loaded backgrounds correctly?
+4. **Review findings** — if a `review.md` exists for this scene, assess whether each finding flagged by the producer has been addressed by this take's output.
+
+For every failure found, record:
+- The specific finding (what was wrong)
+- The rule violated (with source — role file or background file)
+- The location (file path, section, or line)
+- The required change (exact, specific, actionable)
+
+Review the full output before writing any notes. Do not flag issues mid-review.
+
+### Step 5 — Determine take verdict
+
+The take **passes** only if all of the following are true:
+- All manuscript objectives are met
+- No actor violated their role's constraints
+- No actor materially violated background document conventions
+- The writer found no significant manuscript fidelity failures
+- All findings from `review.md` (if present) have been addressed
+
+If any condition is not met, the take **fails**.
+
+### Step 6 — Write the take file
+
+Write `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` using the take template structure:
+
+- **Actor Summary** — factual account of what each actor completed and skipped
+- **Director's Notes** — per-actor verdict with specific findings (leave empty if no findings for an actor)
+- **Writer's Notes** — the writer's fidelity report, formatted into the template sections
+- **Next Take Instructions** — if the take failed, consolidate all required changes into a prioritised, actor-attributed list; draw from Director's Notes, Writer's Notes, and any unresolved `review.md` findings — all sources must be translated into specific, actor-attributed instructions, not left as abstract observations; omit this section if the take passed
+
+### Step 7 — Dispatch writer to resolve manuscript issues (if any)
+
+If the Writer's Notes from Step 3 contain manuscript issues — unclear action wording, missing sequencing constraints, incorrect information that caused actor deviation — spawn a writer actor to revise the manuscript before the next take:
+
+- Pass `--role writer` as arguments
+- Include in the agent prompt:
+  - The path to `manuscript.md`
+  - The manuscript issues identified in the Writer's Notes, verbatim
+  - Instructions to read the manuscript in full, revise only the sections identified as problematic, and surface the proposed changes to the user for confirmation before writing
+
+Wait for the writer to complete before proceeding.
+
+If no manuscript issues were identified, skip this step.
+
+### Step 8 — Return verdict to user
+
+**If the take failed:**
+
+Surface a clear summary:
+
+```
+Take <NNN> — FAIL
+
+The following issues must be resolved before the next take:
+
+<Next Take Instructions, numbered>
+
+Run /shoot-take <scene-name> to begin take <NNN+1>.
+Or run /shoot-scene <scene-name> to let the director iterate automatically.
+```
+
+Stop here. Do not proceed automatically.
+
+**If the take passed:**
+
+Surface a clear summary:
+
+```
+Take <NNN> — PASS
+
+All objectives met. Scene is ready for completion.
+
+Run /wrap-scene <scene-name> to produce wrap.md and update the storyboard.
+```
+
+Stop here.
+
+---
+
+## Output
+
+- `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` — take file with Actor Summary, Director's Notes, Writer's Notes, and Next Take Instructions (if failed)
+- `.claude/slated/scenes/scene-<name>/manuscript.md` — updated by the writer if manuscript issues were identified (Step 7)
+- Verdict returned to user: `pass` or `fail` with a summary of issues (if failed) and the next action to take
+
+---
+
+## Rules
+
+- Never run a scene whose status is not `confirmed` or `in-progress`
+- Never dispatch an actor whose role file does not exist in either the project or global catalogue
+- Never skip the writer review — manuscript fidelity is not optional
+- Never skip dispatching the writer when manuscript issues are identified — unresolved issues compound across takes
+- Never write vague Director's Notes — every finding must have a rule, a location, and a required change
+- Never auto-proceed to another take — always stop and return control to the user
+- Never approve a take where an actor violated their role's constraints, even if the output appears correct
+- If a previous take exists, always pass the take file path to each actor — never run a subsequent take without the actor having access to their own prior notes
