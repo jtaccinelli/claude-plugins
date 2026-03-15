@@ -13,7 +13,7 @@ Make targeted, minimal changes to an existing background document. The casting d
 
 ## Pre-work
 
-1. Resolve the background from `$ARGUMENTS` — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific), then `~/.claude/slated/backgrounds/background-<name>.md` (global); note which location the file was found at
+1. Resolve the background from `$ARGUMENTS` — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/backgrounds/background-<name>.md 2>/dev/null`) to check if it exists globally, and if so read it at `$HOME/.claude/slated/backgrounds/background-<name>.md`; note which location the file was found at
 2. Read the background file in full — understand every section before the interview begins
 3. If the background does not exist in either location, stop — suggest `/establish-background` to define a new one
 

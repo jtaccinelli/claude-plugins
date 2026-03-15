@@ -95,7 +95,7 @@ For technologies **without a background**: read the representative source files 
 Present each section of the draft to the user separately, with evidence citations. After presenting all three sections for a given background, ask for confirmation or requested changes before proceeding to the next background.
 
 Once all sections are confirmed for a background, ask whether it should be written as:
-1. **Global** — reusable across all projects → `~/.claude/slated/backgrounds/background-<name>.md`
+1. **Global** — reusable across all projects → `$HOME/.claude/slated/backgrounds/background-<name>.md`
 2. **Project-specific** — only for this project → `.claude/slated/backgrounds/background-<name>.md`
 
 Write the file only after destination is confirmed.
@@ -153,7 +153,7 @@ When the skill completes, the following files will have been written (subject to
 - `.claude/slated/scenes/` — scaffolded if absent
 - `.claude/slated/roles/` — scaffolded if absent
 - `.claude/slated/backgrounds/` — scaffolded if absent
-- `~/.claude/slated/backgrounds/background-<name>.md` and/or `.claude/slated/backgrounds/background-<name>.md` — one per new background confirmed and written
+- `$HOME/.claude/slated/backgrounds/background-<name>.md` and/or `.claude/slated/backgrounds/background-<name>.md` — one per new background confirmed and written
 - `.claude/slated/roles/role-<name>.md` — one per confirmed cast role, written by casting-director sub-agents
 - `.claude/slated/set/outline.md` — the retroactive set outline describing the project as it exists
 

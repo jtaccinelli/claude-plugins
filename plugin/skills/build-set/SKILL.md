@@ -15,7 +15,7 @@ Scaffold the project from the set outline. The set-designer reads `.claude/slate
 
 1. Read `.claude/slated/set/outline.md` in full — this is the sole source of truth for all scaffolding decisions; if it does not exist, stop and instruct the user to run `/produce-project` first. If `.claude/slated/set/review.md` exists, delete it — the scaffold is being (re)built and the prior review is no longer valid; a fresh review will be required
 2. Ensure the following project-level directories exist, creating any that are absent: `.claude/slated/set/`, `.claude/slated/scenes/`, `.claude/slated/roles/`, `.claude/slated/backgrounds/`. Do not modify existing files.
-3. Read each background document listed in the outline's tech stack — check `.claude/slated/backgrounds/` (project) first, then `~/.claude/slated/backgrounds/` (global); use whichever is found first. Understand the conventions before touching any files.
+3. Read each background document listed in the outline's tech stack — check `.claude/slated/backgrounds/background-<name>.md` (project) first; if not found, use Bash (`ls $HOME/.claude/slated/backgrounds/background-<name>.md 2>/dev/null`) to check globally and read at `$HOME/.claude/slated/backgrounds/background-<name>.md` if present; use whichever is found first. Understand the conventions before touching any files.
 4. Confirm the outline is complete — every section must be populated; if any section is missing or unclear, surface the gap and ask before proceeding
 
 ---

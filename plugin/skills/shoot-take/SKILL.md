@@ -15,8 +15,8 @@ Execute one take of a scene. Dispatch actors per the manuscript cast, review all
 
 1. Resolve the scene from `$ARGUMENTS` — find `.claude/slated/scenes/scene-<name>/manuscript.md`
 2. Read the manuscript in full — cast, resources, objectives, and all shots
-3. Read each role file referenced in the cast — check `.claude/slated/roles/role-<name>.md` first (project-specific), then `~/.claude/slated/roles/role-<name>.md` (global); use whichever is found first
-4. Read each background file referenced in the cast — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific), then `~/.claude/slated/backgrounds/background-<name>.md` (global); use whichever is found first
+3. Read each role file referenced in the cast — check `.claude/slated/roles/role-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/roles/role-<name>.md 2>/dev/null`) to check globally and read at `$HOME/.claude/slated/roles/role-<name>.md` if present; use whichever is found first
+4. Read each background file referenced in the cast — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/backgrounds/background-<name>.md 2>/dev/null`) to check globally and read at `$HOME/.claude/slated/backgrounds/background-<name>.md` if present; use whichever is found first
 5. Determine the take number — glob `.claude/slated/scenes/scene-<name>/takes/take-*.md`, count existing files, next take is that count + 1 (zero-padded to three digits: `001`, `002`, etc.)
 6. Check for `.claude/slated/scenes/scene-<name>/review.md` — read it in full if it exists; its findings must inform the director's review this take
 7. Confirm the manuscript status is `confirmed` or `in-progress` — if neither, stop and report that the scene is not ready to shoot

@@ -91,7 +91,7 @@ Derive a kebab-case name from the domain (e.g. "Tailwind CSS" → `tailwind`, "R
 
 Ask the user whether this background should be:
 
-1. **Global** — reusable across all projects on this device → writes to `~/.claude/slated/backgrounds/background-<name>.md`
+1. **Global** — reusable across all projects on this device → writes to `$HOME/.claude/slated/backgrounds/background-<name>.md`
 2. **Project-specific** — only available in this project → writes to `.claude/slated/backgrounds/background-<name>.md`
 
 Present the full file path for confirmation before writing.
@@ -104,7 +104,7 @@ Write the background file to the confirmed location. Every section must be fully
 
 ## Output
 
-- `~/.claude/slated/backgrounds/background-<name>.md` or `.claude/slated/backgrounds/background-<name>.md` — complete, immediately usable background document at the confirmed location
+- `$HOME/.claude/slated/backgrounds/background-<name>.md` or `.claude/slated/backgrounds/background-<name>.md` — complete, immediately usable background document at the confirmed location
 
 Report the file path.
 

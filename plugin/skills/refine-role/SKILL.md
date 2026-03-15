@@ -13,7 +13,7 @@ Make targeted, minimal changes to an existing role definition. The casting direc
 
 ## Pre-work
 
-1. Resolve the role from `$ARGUMENTS` — check `.claude/slated/roles/role-<name>.md` first (project-specific), then `~/.claude/slated/roles/role-<name>.md` (global); note which location the file was found at
+1. Resolve the role from `$ARGUMENTS` — check `.claude/slated/roles/role-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/roles/role-<name>.md 2>/dev/null`) to check if it exists globally, and if so read it at `$HOME/.claude/slated/roles/role-<name>.md`; note which location the file was found at
 2. Read the role file in full — understand every section before the interview begins
 3. If the role does not exist in either location, stop — suggest `/cast-role` to define a new one
 

@@ -40,7 +40,7 @@ The bundled crew role definitions live alongside this skill at `${CLAUDE_SKILL_D
 - `role-visualiser.md`
 - `role-writer.md`
 
-Read each file from `${CLAUDE_SKILL_DIR}/roles/<filename>` and write its contents to `~/.claude/slated/roles/<filename>`. Do not overwrite.
+Read each file from `${CLAUDE_SKILL_DIR}/roles/<filename>` and write its contents to `$HOME/.claude/slated/roles/<filename>` (using the resolved home directory from Pre-work). Do not overwrite.
 
 ### Step 4 — Report status
 

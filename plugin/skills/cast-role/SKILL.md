@@ -116,7 +116,7 @@ Derive a kebab-case name from the role title (e.g. "Design Engineer" → `design
 
 Ask the user whether this role should be:
 
-1. **Global** — available across all projects on this device → writes to `~/.claude/slated/roles/role-<name>.md`
+1. **Global** — available across all projects on this device → writes to `$HOME/.claude/slated/roles/role-<name>.md`
 2. **Project-specific** — only available in this project → writes to `.claude/slated/roles/role-<name>.md`
 
 Present the full file path for confirmation before writing.
@@ -129,7 +129,7 @@ Write the role file to the confirmed location. Every section must be fully popul
 
 ## Output
 
-- `~/.claude/slated/roles/role-<name>.md` or `.claude/slated/roles/role-<name>.md` — complete, production-ready role definition at the confirmed location
+- `$HOME/.claude/slated/roles/role-<name>.md` or `.claude/slated/roles/role-<name>.md` — complete, production-ready role definition at the confirmed location
 
 Report the file path. If the role's effective deployment will require one or more background documents that do not yet exist, name them specifically so they can be defined before any scene casts this role.
 
