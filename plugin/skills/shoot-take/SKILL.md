@@ -20,6 +20,12 @@ Execute one take of a scene. Dispatch actors per the manuscript cast, review all
 5. Determine the take number — glob `.claude/slated/scenes/scene-<name>/takes/take-*.md`, count existing files, next take is that count + 1 (zero-padded to three digits: `001`, `002`, etc.)
 6. Check for `.claude/slated/scenes/scene-<name>/review.md` — read it in full if it exists; its findings must inform the director's review this take
 7. Confirm the manuscript status is `confirmed` or `in-progress` — if neither, stop and report that the scene is not ready to shoot
+8. Create a git worktree for this take:
+   - Derive the branch name: `take/<scene-name>-<NNN>` (using the zero-padded take number from step 5)
+   - Derive the worktree path: `.worktrees/take-<scene-name>-<NNN>` (relative to the repo root)
+   - Run: `git worktree add -b take/<scene-name>-<NNN> .worktrees/take-<scene-name>-<NNN>`
+   - If the worktree cannot be created (e.g. branch already exists from a previous attempt), stop and report the conflict — do not proceed until it is resolved
+   - Record the absolute worktree path for use in Step 2
 
 ---
 
@@ -45,8 +51,10 @@ For each actor in the Cast table, spawn a sub-agent using the actor agent:
 - Include in the agent prompt:
   - The full manuscript objectives
   - The specific shot(s) assigned to this actor, verbatim from the manuscript
-  - The path to the scene directory so the actor can read/write files relative to it
-  - If a previous take exists, the path to the most recent take file — instruct the actor to read it in full before beginning, paying particular attention to their own Director's Notes and the Next Take Instructions
+  - The absolute path to the worktree created in Pre-work step 8 as the actor's working directory — all file reads and writes must occur within this path
+  - The path to the scene directory within the worktree (i.e. `<worktree-path>/.claude/slated/scenes/scene-<name>/`) so the actor can read/write scene-relative files
+  - An explicit constraint: actors must write only under `plugin/` within the worktree — never to `.claude/slated/` inside the worktree or in the main tree
+  - If a previous take exists, the path to the most recent take file in the main tree — instruct the actor to read it in full before beginning, paying particular attention to their own Director's Notes and the Next Take Instructions
 
 Dispatch shots sequentially by default. A shot is independent only if none of its actions reference the output of another shot in this take as a prerequisite — check the manuscript explicitly before deciding. If a shot is independent, it may be dispatched in parallel with others. If any dependency exists, the dependent shot must wait until the shot it depends on has completed.
 
@@ -104,7 +112,7 @@ If any condition is not met, the take **fails**.
 
 ### Step 6 — Write the take file
 
-Write `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` using the take template structure:
+Write the take file to the **main tree** path — not the worktree. The path is `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` relative to the repo root (not relative to the worktree root). Use the take template structure:
 
 - **Actor Summary** — factual account of what each actor completed and skipped
 - **Director's Notes** — per-actor verdict with specific findings (leave empty if no findings for an actor)
@@ -125,7 +133,22 @@ Wait for the writer to complete before proceeding.
 
 If no manuscript issues were identified, skip this step.
 
-### Step 8 — Return verdict to user
+### Step 8 — Resolve the worktree
+
+**If the take passed:**
+
+1. Merge the take branch into the current branch: `git merge take/<scene-name>-<NNN> --no-ff -m "take(<scene-name>): merge take-<NNN>"`
+2. Remove the worktree: `git worktree remove .worktrees/take-<scene-name>-<NNN>`
+3. Delete the take branch: `git branch -d take/<scene-name>-<NNN>`
+
+**If the take failed:**
+
+1. Force-remove the worktree without merging: `git worktree remove --force .worktrees/take-<scene-name>-<NNN>`
+2. Delete the take branch without merging: `git branch -D take/<scene-name>-<NNN>`
+
+In both cases, confirm the worktree has been removed before proceeding. If any of these commands fail, surface the error to the user and stop — do not proceed to Step 9 until the worktree is fully resolved.
+
+### Step 9 — Return verdict to user
 
 **If the take failed:**
 
@@ -178,3 +201,7 @@ Stop here.
 - Never auto-proceed to another take — always stop and return control to the user
 - Never approve a take where an actor violated their role's constraints, even if the output appears correct
 - If a previous take exists, always pass the take file path to each actor — never run a subsequent take without the actor having access to their own prior notes
+- Never merge a take branch into the main branch without a passing verdict — a failing take's worktree is always force-removed without merging
+- Always clean up the worktree (Step 8) before returning the verdict to the user — never leave an orphaned worktree or stale take branch
+- Never allow actors to write to `.claude/slated/` inside the worktree — actors are constrained to `plugin/` within the worktree; framework artefacts are never produced in a worktree context
+- Never write the take file inside the worktree — the take file is always written to the main tree path
