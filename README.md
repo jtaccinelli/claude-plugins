@@ -34,10 +34,14 @@ The local copy takes precedence over any installed registry version with the sam
 
 ## Getting Started
 
-### 1. Install the plugin
+### 1. Add the marketplace and install the plugin
 
 ```
-/plugin install slated
+/plugin marketplace add jtaccinelli-slated
+```
+
+```
+/plugin install slated@jtaccinelli-slated
 ```
 
 ### 2. Initialise global directories (once per device)
