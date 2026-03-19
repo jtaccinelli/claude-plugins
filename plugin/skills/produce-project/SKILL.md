@@ -63,7 +63,7 @@ Required technologies:
 The following technologies require background documents before production can proceed:
 - <technology>
 
-Run /establish-background for each before continuing.
+Run /slated:establish-background for each before continuing.
 ```
 
 Do not proceed until every required technology has a background document.
@@ -72,7 +72,7 @@ Do not proceed until every required technology has a background document.
 
 From the production workflow, compile the crew roles required. Crew roles govern the production itself and must be present before any work begins. At minimum: `writer`, `director`, `visualiser`, `casting-director`, `set-designer`, `producer`. Check which are defined.
 
-Cast roles — `design-engineer`, `systems-engineer`, or any other scene-delivery role — are not verified here. They are checked at scene-planning time against the manuscript cast when `/write-scene` is run.
+Cast roles — `design-engineer`, `systems-engineer`, or any other scene-delivery role — are not verified here. They are checked at scene-planning time against the manuscript cast when `/slated:write-scene` is run.
 
 Present the crew role audit:
 
@@ -88,7 +88,7 @@ Required crew roles:
 The following crew roles must be defined before production can proceed:
 - <role>
 
-Run /cast-role for each before continuing.
+Run /slated:cast-role for each before continuing.
 ```
 
 Do not proceed until every required crew role is defined.

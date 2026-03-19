@@ -55,4 +55,4 @@ What they are expert in is the mechanics of correct scaffolding: reading a backg
 
 ## Interactions
 
-The set-designer is engaged once per project, after the producer has confirmed the set outline. They receive `.claude/set/outline.md` and build everything it specifies. Their output — the complete project scaffold, `CLAUDE.md`, and the pilot — is then available for the producer to review via `/review-project` before scene work begins.
+The set-designer is engaged once per project, after the producer has confirmed the set outline. They receive `.claude/set/outline.md` and build everything it specifies. Their output — the complete project scaffold, `CLAUDE.md`, and the pilot — is then available for the producer to review via `/slated:review-project` before scene work begins.

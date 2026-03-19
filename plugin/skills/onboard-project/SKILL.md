@@ -7,7 +7,7 @@ argument-hint: [path to existing project root, if not CWD]
 
 # Onboard Project
 
-Bring an existing project into the Slated framework by reading what is already there. Unlike `/produce-project` — which gates a project before it is built — this skill starts from running code and works backwards: scanning the codebase for evidence, drafting backgrounds from discovered patterns, proposing roles from observed responsibility structure, and authoring a set outline that describes what the project *is*, not what to build. Every artefact is confirmed before it is written.
+Bring an existing project into the Slated framework by reading what is already there. Unlike `/slated:produce-project` — which gates a project before it is built — this skill starts from running code and works backwards: scanning the codebase for evidence, drafting backgrounds from discovered patterns, proposing roles from observed responsibility structure, and authoring a set outline that describes what the project *is*, not what to build. Every artefact is confirmed before it is written.
 
 ---
 
@@ -124,7 +124,7 @@ For each proposed role, include:
 
 Ask the user to confirm, modify, or reject each proposed role. Do not write any role file without explicit confirmation.
 
-For each confirmed role, conduct the role definition interview directly — following the same process as `/cast-role`: establish identity, background narrative, expertise, behavioral parameters, constraints, and interactions through dialogue before writing anything. Do not proceed to Step 5 until all accepted roles have been written.
+For each confirmed role, conduct the role definition interview directly — following the same process as `/slated:cast-role`: establish identity, background narrative, expertise, behavioral parameters, constraints, and interactions through dialogue before writing anything. Do not proceed to Step 5 until all accepted roles have been written.
 
 ### Step 5 — Write the retroactive set outline
 
@@ -169,5 +169,5 @@ Report all file paths written at completion.
 - Never write the set outline before backgrounds and roles are confirmed
 - Never invent cast roles — only derive them from observed responsibility structure in the scanned codebase
 - Never write a background without presenting each section (Semantics, Structure, Function) separately for review before writing
-- Never write a cast role directly — always dispatch a casting-director sub-agent using the `/cast-role` process
+- Never write a cast role directly — always dispatch a casting-director sub-agent using the `/slated:cast-role` process
 - Never mark coverage as sufficient for an existing background without checking what was observed against what is documented

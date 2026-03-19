@@ -15,7 +15,7 @@ Make targeted, minimal changes to an existing background document. The casting d
 
 1. Resolve the background from `$ARGUMENTS` — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/backgrounds/background-<name>.md 2>/dev/null`) to check if it exists globally, and if so read it at `$HOME/.claude/slated/backgrounds/background-<name>.md`; note which location the file was found at
 2. Read the background file in full — understand every section before the interview begins
-3. If the background does not exist in either location, stop — suggest `/establish-background` to define a new one
+3. If the background does not exist in either location, stop — suggest `/slated:establish-background` to define a new one
 
 ---
 
@@ -29,7 +29,7 @@ Use `$ARGUMENTS` as a starting point if a reason was provided. Ask the user:
 2. Which sections are affected — Semantics, Structure, or Function?
 3. Is this a correction (something wrong), an addition (something missing), or a removal (something that does not belong)?
 
-Do not proceed until the scope is clear. If the answers suggest the background needs fundamental rebuilding rather than targeted adjustment, surface that and ask whether a full redefinition via `/establish-background` would be more appropriate.
+Do not proceed until the scope is clear. If the answers suggest the background needs fundamental rebuilding rather than targeted adjustment, surface that and ask whether a full redefinition via `/slated:establish-background` would be more appropriate.
 
 ### Step 2 — Propose targeted changes
 
@@ -67,5 +67,5 @@ Report the file path and summarise which sections were changed and why.
 - Never rewrite sections that were not identified as needing change
 - Never accept vague change requests — if the reason for a change is unclear, ask until it is specific
 - Never add behavioural parameters to a background — backgrounds document what to know, not how to behave; that belongs in roles
-- Never create a new background file — this skill only modifies existing ones; use `/establish-background` for new backgrounds
+- Never create a new background file — this skill only modifies existing ones; use `/slated:establish-background` for new backgrounds
 - Never move a background between global and project locations — this skill only updates content, not location

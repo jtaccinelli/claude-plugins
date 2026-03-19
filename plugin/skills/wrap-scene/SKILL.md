@@ -48,7 +48,7 @@ Write `.claude/slated/scenes/scene-<name>/wrap.md` using this structure:
 
 ### Step 4 — Invalidate prior review
 
-If `.claude/slated/scenes/scene-<name>/review.md` exists, delete it. The scene is being wrapped (or re-wrapped after a review finding) and the prior review is no longer valid. This ensures the next run of `/review-project` treats this scene as unreviewed and performs a fresh review of the corrected output.
+If `.claude/slated/scenes/scene-<name>/review.md` exists, delete it. The scene is being wrapped (or re-wrapped after a review finding) and the prior review is no longer valid. This ensures the next run of `/slated:review-project` treats this scene as unreviewed and performs a fresh review of the corrected output.
 
 ### Step 5 — Dispatch the visualiser
 
@@ -83,8 +83,8 @@ If Role Improvement Notes were present in the Completion Record, append to the s
 
 ```
 Role improvements identified. Run the following before the next scene is planned:
-- /refine-role <role-name> — <one-line summary of the improvement needed>
-- /refine-background <background-name> — <one-line summary of the improvement needed>
+- /slated:refine-role <role-name> — <one-line summary of the improvement needed>
+- /slated:refine-background <background-name> — <one-line summary of the improvement needed>
 ```
 
 ---
@@ -93,7 +93,7 @@ Role improvements identified. Run the following before the next scene is planned
 
 - `.claude/slated/scenes/scene-<name>/manuscript.md` — status set to `complete`, Completion Record appended
 - `.claude/slated/scenes/scene-<name>/wrap.md` — written by the director
-- `.claude/slated/scenes/scene-<name>/review.md` — deleted if it existed, so the next `/review-project` run treats this scene as unreviewed
+- `.claude/slated/scenes/scene-<name>/review.md` — deleted if it existed, so the next `/slated:review-project` run treats this scene as unreviewed
 - `.claude/slated/scenes/storyboard.md` — scene moved from Pending to Completed
 
 ---

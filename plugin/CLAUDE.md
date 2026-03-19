@@ -6,7 +6,7 @@ This project uses a film-production-inspired agentic coordination structure. All
 
 ## Folder Reference
 
-The framework distinguishes between **global** resources (shared across all projects on a device) and **project-level** resources (specific to this project). Run `/init` once per device to create the global directories.
+The framework distinguishes between **global** resources (shared across all projects on a device) and **project-level** resources (specific to this project). Run `/slated:init` once per device to create the global directories.
 
 ### Global (`~/.claude/`)
 
@@ -44,23 +44,23 @@ The framework distinguishes between **global** resources (shared across all proj
 
 ### Pre-production
 
-1. If any required backgrounds are missing, the **casting director** defines them (`/establish-background`).
-2. The **producer** gates the project for production readiness (`/produce-project`) — interviewing to understand what is being built, verifying all required backgrounds and roles exist, and authoring a set outline in `.claude/slated/set/`. No scaffolding begins until the outline is confirmed.
-3. The **set-designer** builds the project from the outline (`/build-set`) — constructing the complete scaffold, installing dependencies, writing `CLAUDE.md`, and producing the pilot.
+1. If any required backgrounds are missing, the **casting director** defines them (`/slated:establish-background`).
+2. The **producer** gates the project for production readiness (`/slated:produce-project`) — interviewing to understand what is being built, verifying all required backgrounds and roles exist, and authoring a set outline in `.claude/slated/set/`. No scaffolding begins until the outline is confirmed.
+3. The **set-designer** builds the project from the outline (`/slated:build-set`) — constructing the complete scaffold, installing dependencies, writing `CLAUDE.md`, and producing the pilot.
 
 ### Scene Planning
 
-4. The **writer** drafts a `manuscript.md` from the requirement (`/write-scene`) — casting roles, defining verifiable objectives, and sequencing actions. The writer self-validates the cast against available roles and backgrounds. On confirmation, the **visualiser** is dispatched to add the scene to the Pending section of `storyboard.md`.
+4. The **writer** drafts a `manuscript.md` from the requirement (`/slated:write-scene`) — casting roles, defining verifiable objectives, and sequencing actions. The writer self-validates the cast against available roles and backgrounds. On confirmation, the **visualiser** is dispatched to add the scene to the Pending section of `storyboard.md`.
 
 ### Production
 
-5. The **director** runs takes against the manuscript (`/shoot-take` for a single take, `/shoot-scene` to iterate automatically). Each take dispatches actors per the cast, commissions a **writer** review of manuscript fidelity, and produces a take file with Director's Notes.
+5. The **director** runs takes against the manuscript (`/slated:shoot-take` for a single take, `/slated:shoot-scene` to iterate automatically). Each take dispatches actors per the cast, commissions a **writer** review of manuscript fidelity, and produces a take file with Director's Notes.
 6. If a take **fails**: next-take instructions are surfaced and actors re-run.
-7. If a take **passes**: the director wraps the scene (`/wrap-scene`) — appending the Completion Record to the manuscript, writing `wrap.md` (including Editor Notes for shared artefacts touched), and dispatching the **visualiser** to move the scene from Pending to Completed in `storyboard.md`.
+7. If a take **passes**: the director wraps the scene (`/slated:wrap-scene`) — appending the Completion Record to the manuscript, writing `wrap.md` (including Editor Notes for shared artefacts touched), and dispatching the **visualiser** to move the scene from Pending to Completed in `storyboard.md`.
 
 ### Post-production
 
-8. The **producer** reviews the project (`/review-project`) — checking the set build first (if unreviewed), then reviewing all completed scenes without a review record in storyboard order. Each subject gets a static analysis pass and an interactive review from the user's perspective. The output is a review file per subject and a project-level `report.md`.
+8. The **producer** reviews the project (`/slated:review-project`) — checking the set build first (if unreviewed), then reviewing all completed scenes without a review record in storyboard order. Each subject gets a static analysis pass and an interactive review from the user's perspective. The output is a review file per subject and a project-level `report.md`.
 
 ---
 
@@ -85,7 +85,7 @@ Roles divide into two categories:
 
 ### Cast
 
-Cast roles are project-specific and are not bundled with the framework. They must be defined using `/cast-role` before any scene that requires them can be planned.
+Cast roles are project-specific and are not bundled with the framework. They must be defined using `/slated:cast-role` before any scene that requires them can be planned.
 
 ---
 
@@ -93,20 +93,20 @@ Cast roles are project-specific and are not bundled with the framework. They mus
 
 | Skill | Expected Role | Purpose |
 |---|---|---|
-| `/init` | `casting-director` | Bootstrap global framework directories (`~/.claude/slated/roles/`, `~/.claude/slated/backgrounds/`) on a new device |
-| `/produce-project` | `producer` | Gate production readiness — verify backgrounds and roles, author the set outline, scaffold project directories |
-| `/onboard-project` | `casting-director` | Bring an existing project into the framework — scan the codebase, draft backgrounds from discovered patterns, define cast roles through interview, and author a retroactive set outline |
-| `/build-set` | `set-designer` | Build the project scaffold from the set outline |
-| `/write-scene` | `writer` | Plan a new scene — manuscript, cast, objectives, storyboard entry |
-| `/shoot-take` | `director` | Execute one take and return a verdict |
-| `/shoot-scene` | `director` | Execute all takes automatically, then finalise |
-| `/wrap-scene` | `director` | Close out a passing scene — Completion Record, wrap.md, storyboard |
-| `/check-continuity` | `visualiser` | Log an out-of-band codebase change into the storyboard as a Recorded entry, and flag whether it warrants a set outline update |
-| `/review-project` | `producer` | Post-production QA — review the set build and all unreviewed scenes; produce a project report |
-| `/cast-role` | `casting-director` | Define a new role through a structured interview |
-| `/refine-role` | `casting-director` | Adjust an existing role through targeted interview |
-| `/establish-background` | `casting-director` | Define a new background through a structured interview |
-| `/refine-background` | `casting-director` | Adjust an existing background through targeted interview |
+| `/slated:init` | `casting-director` | Bootstrap global framework directories (`~/.claude/slated/roles/`, `~/.claude/slated/backgrounds/`) on a new device |
+| `/slated:produce-project` | `producer` | Gate production readiness — verify backgrounds and roles, author the set outline, scaffold project directories |
+| `/slated:onboard-project` | `casting-director` | Bring an existing project into the framework — scan the codebase, draft backgrounds from discovered patterns, define cast roles through interview, and author a retroactive set outline |
+| `/slated:build-set` | `set-designer` | Build the project scaffold from the set outline |
+| `/slated:write-scene` | `writer` | Plan a new scene — manuscript, cast, objectives, storyboard entry |
+| `/slated:shoot-take` | `director` | Execute one take and return a verdict |
+| `/slated:shoot-scene` | `director` | Execute all takes automatically, then finalise |
+| `/slated:wrap-scene` | `director` | Close out a passing scene — Completion Record, wrap.md, storyboard |
+| `/slated:check-continuity` | `visualiser` | Log an out-of-band codebase change into the storyboard as a Recorded entry, and flag whether it warrants a set outline update |
+| `/slated:review-project` | `producer` | Post-production QA — review the set build and all unreviewed scenes; produce a project report |
+| `/slated:cast-role` | `casting-director` | Define a new role through a structured interview |
+| `/slated:refine-role` | `casting-director` | Adjust an existing role through targeted interview |
+| `/slated:establish-background` | `casting-director` | Define a new background through a structured interview |
+| `/slated:refine-background` | `casting-director` | Adjust an existing background through targeted interview |
 
 ---
 

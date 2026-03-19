@@ -15,7 +15,7 @@ Make targeted, minimal changes to an existing role definition. The casting direc
 
 1. Resolve the role from `$ARGUMENTS` — check `.claude/slated/roles/role-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/roles/role-<name>.md 2>/dev/null`) to check if it exists globally, and if so read it at `$HOME/.claude/slated/roles/role-<name>.md`; note which location the file was found at
 2. Read the role file in full — understand every section before the interview begins
-3. If the role does not exist in either location, stop — suggest `/cast-role` to define a new one
+3. If the role does not exist in either location, stop — suggest `/slated:cast-role` to define a new one
 
 ---
 
@@ -29,7 +29,7 @@ Use `$ARGUMENTS` as a starting point if a reason was provided. Ask the user:
 2. Which sections are affected — identity, background, expertise, behavioral parameters, constraints, or interactions?
 3. Is this a correction (something wrong), an addition (something missing), or a removal (something that does not belong)?
 
-Do not proceed until the scope is clear. If the answers suggest the role needs fundamental rebuilding rather than targeted adjustment, surface that and ask whether a full redefinition via `/cast-role` would be more appropriate.
+Do not proceed until the scope is clear. If the answers suggest the role needs fundamental rebuilding rather than targeted adjustment, surface that and ask whether a full redefinition via `/slated:cast-role` would be more appropriate.
 
 ### Step 2 — Propose targeted changes
 
@@ -67,5 +67,5 @@ Report the file path and summarise which sections were changed and why.
 - Never rewrite sections that were not identified as needing change
 - Never add domain knowledge to the role — behavioral parameters only; knowledge belongs in backgrounds
 - Never accept vague change requests — if the reason for a change is unclear, ask until it is specific
-- Never create a new role file — this skill only modifies existing ones; use `/cast-role` for new roles
+- Never create a new role file — this skill only modifies existing ones; use `/slated:cast-role` for new roles
 - Never move a role between global and project locations — this skill only updates content, not location

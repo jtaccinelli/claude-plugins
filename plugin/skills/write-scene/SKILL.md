@@ -53,10 +53,10 @@ Present the proposed cast to the user. If a required role or background does not
 ```
 Cannot proceed — the following are required but do not exist:
 
-- Role: <name> → run /cast-role to define it
-- Background: <name> → run /establish-background to define it
+- Role: <name> → run /slated:cast-role to define it
+- Background: <name> → run /slated:establish-background to define it
 
-Once created, run /write-scene again to restart planning.
+Once created, run /slated:write-scene again to restart planning.
 ```
 
 Do not proceed to Step 4 until the cast is fully satisfied by existing roles and backgrounds.

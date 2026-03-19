@@ -172,8 +172,8 @@ The following issues must be resolved before the next take:
 
 <Next Take Instructions, numbered>
 
-Run /shoot-take <scene-name> to begin take <NNN+1>.
-Or run /shoot-scene <scene-name> to let the director iterate automatically.
+Run /slated:shoot-take <scene-name> to begin take <NNN+1>.
+Or run /slated:shoot-scene <scene-name> to let the director iterate automatically.
 ```
 
 Stop here. Do not proceed automatically.
@@ -187,7 +187,7 @@ Take <NNN> — PASS
 
 All objectives met. Scene is ready for completion.
 
-Run /wrap-scene <scene-name> to produce wrap.md and update the storyboard.
+Run /slated:wrap-scene <scene-name> to produce wrap.md and update the storyboard.
 ```
 
 Stop here.

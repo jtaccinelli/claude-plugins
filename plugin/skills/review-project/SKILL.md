@@ -115,7 +115,7 @@ Write `.claude/slated/set/review.md` using this structure:
 
 The set review **passes** only if all outline items are present and correct, no convention deviations were found, and the application starts cleanly. Otherwise the verdict is **flag**.
 
-If flagged: surface the findings to the user, instruct them to run `/build-set` to action corrections before the set review can be re-run, and **stop**. Do not proceed to Phase 2 — scene reviews conducted on a defective scaffold may produce unreliable findings.
+If flagged: surface the findings to the user, instruct them to run `/slated:build-set` to action corrections before the set review can be re-run, and **stop**. Do not proceed to Phase 2 — scene reviews conducted on a defective scaffold may produce unreliable findings.
 
 ---
 
@@ -189,7 +189,7 @@ Write `.claude/slated/scenes/scene-<name>/review.md` using the scene review temp
 
 The scene review **passes** only if all objectives are met or confirmed through live testing, no convention deviations were found, no cross-scene inconsistencies were found, and no broken flows were found.
 
-If flagged: overwrite the `review.md` just written (it is the canonical finding record for this run), set the manuscript `**Status**` field back to `in-progress`, and dispatch the visualiser to move the scene from Completed back to Pending in `storyboard.md` — this restores the scene to its pre-wrap state so the re-shoot and re-wrap flow works correctly. Surface findings to the user and instruct them to run `/shoot-take <scene-name>` or `/shoot-scene <scene-name>` to action the findings, then re-run `/review-project` after the scene is re-finalised.
+If flagged: overwrite the `review.md` just written (it is the canonical finding record for this run), set the manuscript `**Status**` field back to `in-progress`, and dispatch the visualiser to move the scene from Completed back to Pending in `storyboard.md` — this restores the scene to its pre-wrap state so the re-shoot and re-wrap flow works correctly. Surface findings to the user and instruct them to run `/slated:shoot-take <scene-name>` or `/slated:shoot-scene <scene-name>` to action the findings, then re-run `/slated:review-project` after the scene is re-finalised.
 
 Do not proceed to the next scene until the current scene's review file is written.
 
