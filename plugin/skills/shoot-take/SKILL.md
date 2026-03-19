@@ -60,7 +60,17 @@ Dispatch shots sequentially by default. A shot is independent only if none of it
 
 Wait for all actors to complete before proceeding.
 
-### Step 3 — Commission writer review
+### Step 3 — Capture changed files
+
+Run the following command in the worktree to get an authoritative list of all files created or modified during this take:
+
+```
+git -C <worktree-path> status --short
+```
+
+Parse the output into a structured list of file paths with their status (A = added, M = modified, D = deleted). Store this list — it will be written into the take file in Step 7. Do not rely on actor output to infer the file list — this git query is the canonical source.
+
+### Step 4 — Commission writer review
 
 Spawn a writer actor to assess manuscript fidelity:
 
@@ -82,7 +92,7 @@ Spawn a writer actor to assess manuscript fidelity:
 
 Wait for the writer to complete before proceeding.
 
-### Step 4 — Review output as director
+### Step 5 — Review output as director
 
 Review all actor output against:
 
@@ -99,7 +109,7 @@ For every failure found, record:
 
 Review the full output before writing any notes. Do not flag issues mid-review.
 
-### Step 5 — Determine take verdict
+### Step 6 — Determine take verdict
 
 The take **passes** only if all of the following are true:
 - All manuscript objectives are met
@@ -110,16 +120,17 @@ The take **passes** only if all of the following are true:
 
 If any condition is not met, the take **fails**.
 
-### Step 6 — Write the take file
+### Step 7 — Write the take file
 
 Write the take file to the **main tree** path — not the worktree. The path is `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` relative to the repo root (not relative to the worktree root). Use the take template structure:
 
+- **Files Changed** — the bullet list of file paths captured in Step 3, grouped by status (Added, Modified, Deleted); this is the canonical record of what changed in this take
 - **Actor Summary** — factual account of what each actor completed and skipped
 - **Director's Notes** — per-actor verdict with specific findings (leave empty if no findings for an actor)
 - **Writer's Notes** — the writer's fidelity report, formatted into the template sections
 - **Next Take Instructions** — if the take failed, consolidate all required changes into a prioritised, actor-attributed list; draw from Director's Notes, Writer's Notes, and any unresolved `review.md` findings — all sources must be translated into specific, actor-attributed instructions, not left as abstract observations; omit this section if the take passed
 
-### Step 7 — Dispatch writer to resolve manuscript issues (if any)
+### Step 8 — Dispatch writer to resolve manuscript issues (if any)
 
 If the Writer's Notes from Step 3 contain manuscript issues — unclear action wording, missing sequencing constraints, incorrect information that caused actor deviation — spawn a writer actor to revise the manuscript before the next take:
 
@@ -133,7 +144,7 @@ Wait for the writer to complete before proceeding.
 
 If no manuscript issues were identified, skip this step.
 
-### Step 8 — Resolve the worktree
+### Step 9 — Resolve the worktree
 
 **If the take passed:**
 
@@ -146,9 +157,9 @@ If no manuscript issues were identified, skip this step.
 1. Force-remove the worktree without merging: `git worktree remove --force .worktrees/take-<scene-name>-<NNN>`
 2. Delete the take branch without merging: `git branch -D take/<scene-name>-<NNN>`
 
-In both cases, confirm the worktree has been removed before proceeding. If any of these commands fail, surface the error to the user and stop — do not proceed to Step 9 until the worktree is fully resolved.
+In both cases, confirm the worktree has been removed before proceeding. If any of these commands fail, surface the error to the user and stop — do not proceed to Step 10 until the worktree is fully resolved.
 
-### Step 9 — Return verdict to user
+### Step 10 — Return verdict to user
 
 **If the take failed:**
 
@@ -185,7 +196,7 @@ Stop here.
 
 ## Output
 
-- `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` — take file with Actor Summary, Director's Notes, Writer's Notes, and Next Take Instructions (if failed)
+- `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` — take file with Files Changed, Actor Summary, Director's Notes, Writer's Notes, and Next Take Instructions (if failed)
 - `.claude/slated/scenes/scene-<name>/manuscript.md` — updated by the writer if manuscript issues were identified (Step 7)
 - Verdict returned to user: `pass` or `fail` with a summary of issues (if failed) and the next action to take
 
@@ -205,3 +216,4 @@ Stop here.
 - Always clean up the worktree (Step 8) before returning the verdict to the user — never leave an orphaned worktree or stale take branch
 - Never allow actors to write to `.claude/slated/` inside the worktree — actors are constrained to `plugin/` within the worktree; framework artefacts are never produced in a worktree context
 - Never write the take file inside the worktree — the take file is always written to the main tree path
+- Never infer the file list from actor output — always derive it from `git status --short` in the worktree (Step 3); actor descriptions may be incomplete or imprecise

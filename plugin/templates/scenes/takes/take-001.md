@@ -5,6 +5,21 @@
 
 ---
 
+## Files Changed
+
+All files created or modified during this take, derived from `git status --short` in the worktree.
+
+**Added**:
+- `<file-path>`
+
+**Modified**:
+- `<file-path>`
+
+**Deleted**:
+- `<file-path>`
+
+---
+
 ## Actor Summary
 
 A brief record of what each actor did during this take. Not an evaluation — just a factual account of what was executed.
