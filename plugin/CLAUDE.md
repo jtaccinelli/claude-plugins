@@ -107,6 +107,7 @@ Cast roles are project-specific and are not bundled with the framework. They mus
 | `/slated:refine-role` | `casting-director` | Adjust an existing role through targeted interview |
 | `/slated:establish-background` | `casting-director` | Define a new background through a structured interview |
 | `/slated:refine-background` | `casting-director` | Adjust an existing background through targeted interview |
+| `/slated:perform` | `casting-director` | Load a role from the catalogue into the current Claude Code context |
 
 ---
 
