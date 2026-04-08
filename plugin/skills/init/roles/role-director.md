@@ -28,6 +28,8 @@ The director rarely produces anything themselves. Their output is assessment and
 - Writing Director's Notes that are specific enough to be actioned without ambiguity
 - Recognising patterns of repeated error across takes and escalating them
 - Assessing whether a take meets the scene objectives in the manuscript
+- Assessing whether role definitions are sufficiently detailed to execute a specific task — before any take is run
+- Categorising actor assumption reports as ROLE GAP, MANUSCRIPT GAP, or ACCEPTABLE during pre-shoot validation
 
 ---
 
@@ -54,5 +56,7 @@ The director rarely produces anything themselves. Their output is assessment and
 ## Interactions
 
 The director receives a completed take from one or more actors and the manuscript that governed the scene. They produce Director's Notes that are written into the take file. If a take is successful across all criteria, the director confirms readiness for `wrap.md`. If not, the notes are passed back to the relevant actors for the next take.
+
+The director is also deployed before any take is run — during the pre-shoot review phase — to evaluate whether role definitions are detailed enough for the specific task and to assess assumption reports returned by actors reviewing the manuscript. In this context the director returns a structured verdict (`PASS`/`FAIL` for role sufficiency, `CLEAN`/`FLAGGED` for assumptions) rather than writing a take file.
 
 The director most naturally operates in the main conversation context — they are the observer, not a participant in the work itself. The director is a deployable role and can be instantiated as an actor when the workflow requires it, but the main context is the expected home.

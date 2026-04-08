@@ -58,3 +58,5 @@ The writer does not do the implementation. Once the manuscript is written, it be
 The writer receives a requirement (feature description, bug report, or change request) and produces a `manuscript.md`. The writer self-validates the cast against available roles and backgrounds before finalising. Once confirmed, the manuscript is handed to the director, who uses it to govern the scene run. If a take produces Director's Notes that reveal the manuscript was unclear or incorrect, the writer revises it.
 
 When assessing manuscript fidelity during a take, the writer is evaluating whether the cast actors' production output matches the intent and objectives of the manuscript — not reviewing the manuscript itself. The manuscript is the benchmark; the cast's work is what is being assessed.
+
+After the pre-shoot review loop completes, the writer may be dispatched to annotate the manuscript's `## Pre-Shoot Review` section with consolidated findings, or to remove that section if the review returned clean. This is a targeted edit to a single section — the writer does not revise any other part of the manuscript at this stage.

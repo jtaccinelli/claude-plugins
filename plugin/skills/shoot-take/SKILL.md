@@ -7,13 +7,75 @@ argument-hint: [scene name]
 
 # Shoot Take
 
-Execute one take of a scene. Dispatch actors per the manuscript cast, review all output against the objectives and role definitions, commission a writer review of manuscript fidelity, write the take file, and return a verdict. If the take fails, stop and surface the next-take instructions to the user.
+Execute one take of a scene. The main thread spawns a director agent to handle all execution — pre-work, actor dispatch, writer review, verdict, worktree resolution — then surfaces the returned verdict to the user.
 
 ---
 
-## Pre-work
+## Orchestration
 
-1. Resolve the scene from `$ARGUMENTS` — find `.claude/slated/scenes/scene-<name>/manuscript.md`
+The main thread is responsible only for spawning the director agent and acting on its result.
+
+### Step 1 — Resolve the scene
+
+Resolve the scene name from `$ARGUMENTS`. Verify that `.claude/slated/scenes/scene-<name>/manuscript.md` exists. If it does not, stop and report that the scene could not be found.
+
+### Step 2 — Spawn the director agent
+
+Spawn a sub-agent using the actor agent:
+
+- Pass `--role director` as arguments
+- Include in the agent prompt:
+  - The scene name
+  - The absolute path to the repo root
+  - The full **Director Agent Instructions** section below, verbatim — this is the director's complete operating brief for this take
+
+Wait for the director agent to complete before proceeding.
+
+### Step 3 — Act on the returned verdict
+
+The director agent returns a structured verdict block (see Director Agent Instructions — Step 11). Parse it and act accordingly:
+
+**If the verdict is FAIL:**
+
+Surface to the user:
+
+```
+Take <NNN> — FAIL
+
+The following issues must be resolved before the next take:
+
+<Next Take Instructions, numbered>
+
+Run /slated:shoot-take <scene-name> to begin take <NNN+1>.
+Or run /slated:shoot-scene <scene-name> to let the director iterate automatically.
+```
+
+Stop here. Do not proceed automatically.
+
+**If the verdict is PASS:**
+
+Surface to the user:
+
+```
+Take <NNN> — PASS
+
+All objectives met. Scene is ready for completion.
+Changes are on branch scene/<scene-name> — open a PR when ready.
+
+Run /slated:wrap-scene <scene-name> to produce wrap.md and update the storyboard.
+```
+
+Stop here.
+
+---
+
+## Director Agent Instructions
+
+The following is the complete operating brief for the director agent. When spawned, the director executes all steps below and returns a structured verdict block at the end.
+
+### Pre-work
+
+1. Resolve the scene from the scene name passed in the prompt — find `.claude/slated/scenes/scene-<name>/manuscript.md`
 2. Read the manuscript in full — cast, resources, objectives, and all shots
 3. Read each role file referenced in the cast — check `.claude/slated/roles/role-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/roles/role-<name>.md 2>/dev/null`) to check globally and read at `$HOME/.claude/slated/roles/role-<name>.md` if present; use whichever is found first
 4. Read each background file referenced in the cast — check `.claude/slated/backgrounds/background-<name>.md` first (project-specific); if not found, use Bash (`ls $HOME/.claude/slated/backgrounds/background-<name>.md 2>/dev/null`) to check globally and read at `$HOME/.claude/slated/backgrounds/background-<name>.md` if present; use whichever is found first
@@ -21,15 +83,14 @@ Execute one take of a scene. Dispatch actors per the manuscript cast, review all
 6. Check for `.claude/slated/scenes/scene-<name>/review.md` — read it in full if it exists; its findings must inform the director's review this take
 7. Confirm the manuscript status is `confirmed` or `in-progress` — if neither, stop and report that the scene is not ready to shoot
 8. Create a git worktree for this take:
-   - Derive the branch name: `take/<scene-name>-<NNN>` (using the zero-padded take number from step 5)
+   - Derive the scene branch name: `scene/<scene-name>`
+   - Check if the scene branch already exists: `git branch --list scene/<scene-name>`
+   - If it does not exist, create it from the current HEAD: `git branch scene/<scene-name>`
+   - Derive the take branch name: `take/<scene-name>-<NNN>` (using the zero-padded take number from step 5)
    - Derive the worktree path: `.worktrees/take-<scene-name>-<NNN>` (relative to the repo root)
-   - Run: `git worktree add -b take/<scene-name>-<NNN> .worktrees/take-<scene-name>-<NNN>`
+   - Create the worktree from the scene branch: `git worktree add -b take/<scene-name>-<NNN> .worktrees/take-<scene-name>-<NNN> scene/<scene-name>`
    - If the worktree cannot be created (e.g. branch already exists from a previous attempt), stop and report the conflict — do not proceed until it is resolved
    - Record the absolute worktree path for use in Step 2
-
----
-
-## Process
 
 ### Step 1 — Update manuscript status
 
@@ -68,7 +129,7 @@ Run the following command in the worktree to get an authoritative list of all fi
 git -C <worktree-path> status --short
 ```
 
-Parse the output into a structured list of file paths with their status (A = added, M = modified, D = deleted). Store this list — it will be written into the take file in Step 7. Do not rely on actor output to infer the file list — this git query is the canonical source.
+Parse the output into a structured list of file paths with their status (A = added, M = modified, D = deleted). Store this list — it will be written into the take file in Step 8. Do not rely on actor output to infer the file list — this git query is the canonical source.
 
 ### Step 4 — Commission writer review
 
@@ -120,7 +181,32 @@ The take **passes** only if all of the following are true:
 
 If any condition is not met, the take **fails**.
 
-### Step 7 — Write the take file
+### Step 7 — Auto-resolve role and background issues (if any)
+
+If the Director's Notes from Step 5 contain role violations or background convention failures, dispatch a casting-director actor to evaluate and resolve them before writing the take file.
+
+For each affected role or background file, spawn a sub-agent:
+
+- Pass `--role casting-director` as arguments
+- Include in the agent prompt:
+  - The path to the role or background file (check project-level first, then global — use whichever was loaded in Pre-work)
+  - The specific Director's Notes findings for that file — the violation, the rule violated, and the required change
+  - Instructions to execute the following process:
+    1. Read the current role or background file in full
+    2. Read the `## Refinement Log` section at the bottom of the file — if the section does not exist, treat the log as empty
+    3. Evaluate each proposed change against the Refinement Log: if a proposed change **reverses a previously logged entry** (re-adds something explicitly removed, or removes something explicitly added in a prior entry), do not apply any changes — return a conflict description to the director instead
+    4. If no conflicts are found, apply only the changes identified in the Director's Notes (nothing beyond the documented finding), then append a new row to the `## Refinement Log` table recording: today's date, the scene and take number, the finding that prompted the change, and a one-sentence summary of what was changed; if the section does not yet exist, add it at the bottom of the file with a table header before appending the first row
+    5. Return a structured report: changes applied (with a brief description) or skipped (with the conflict reason)
+
+Multiple affected files may be dispatched in parallel — there are no cross-file dependencies.
+
+Wait for all casting-director actors to complete before proceeding.
+
+If any casting-director actor returned a conflict, use AskUserQuestion to surface the conflict and pause — do not proceed to Step 8 until the user resolves it.
+
+If no role or background issues were identified in Step 5, skip this step.
+
+### Step 8 — Write the take file
 
 Write the take file to the **main tree** path — not the worktree. The path is `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` relative to the repo root (not relative to the worktree root). Use the take template structure:
 
@@ -130,75 +216,69 @@ Write the take file to the **main tree** path — not the worktree. The path is 
 - **Writer's Notes** — the writer's fidelity report, formatted into the template sections
 - **Next Take Instructions** — if the take failed, consolidate all required changes into a prioritised, actor-attributed list; draw from Director's Notes, Writer's Notes, and any unresolved `review.md` findings — all sources must be translated into specific, actor-attributed instructions, not left as abstract observations; omit this section if the take passed
 
-### Step 8 — Dispatch writer to resolve manuscript issues (if any)
+### Step 9 — Dispatch writer to resolve manuscript issues (if any)
 
-If the Writer's Notes from Step 3 contain manuscript issues — unclear action wording, missing sequencing constraints, incorrect information that caused actor deviation — spawn a writer actor to revise the manuscript before the next take:
+If the Writer's Notes from Step 4 contain manuscript issues — unclear action wording, missing sequencing constraints, incorrect information that caused actor deviation — spawn a writer actor to revise the manuscript before the next take:
 
 - Pass `--role writer` as arguments
 - Include in the agent prompt:
   - The path to `manuscript.md`
   - The manuscript issues identified in the Writer's Notes, verbatim
-  - Instructions to read the manuscript in full, revise only the sections identified as problematic, and surface the proposed changes to the user for confirmation before writing
+  - Instructions to read the manuscript in full, revise only the sections identified as problematic, and apply the changes directly — no user confirmation is required
 
 Wait for the writer to complete before proceeding.
 
 If no manuscript issues were identified, skip this step.
 
-### Step 9 — Resolve the worktree
+### Step 10 — Resolve the worktree
 
 **If the take passed:**
 
-1. Merge the take branch into the current branch: `git merge take/<scene-name>-<NNN> --no-ff -m "take(<scene-name>): merge take-<NNN>"`
-2. Remove the worktree: `git worktree remove .worktrees/take-<scene-name>-<NNN>`
-3. Delete the take branch: `git branch -d take/<scene-name>-<NNN>`
+1. Merge the take branch into the scene branch: `git -C <repo-root> checkout scene/<scene-name> && git merge take/<scene-name>-<NNN> --no-ff -m "take(<scene-name>): merge take-<NNN>"`
+2. Return to the original branch: `git -C <repo-root> checkout -`
+3. Remove the worktree: `git worktree remove .worktrees/take-<scene-name>-<NNN>`
+4. Delete the take branch: `git branch -d take/<scene-name>-<NNN>`
+5. Leave the scene branch (`scene/<scene-name>`) in place — do not merge it into main; it is the output branch for this scene and is ready for a PR
 
 **If the take failed:**
 
 1. Force-remove the worktree without merging: `git worktree remove --force .worktrees/take-<scene-name>-<NNN>`
 2. Delete the take branch without merging: `git branch -D take/<scene-name>-<NNN>`
 
-In both cases, confirm the worktree has been removed before proceeding. If any of these commands fail, surface the error to the user and stop — do not proceed to Step 10 until the worktree is fully resolved.
+In both cases, confirm the worktree has been removed before proceeding. If any of these commands fail, surface the error using AskUserQuestion and stop — do not proceed to Step 11 until the worktree is fully resolved.
 
-### Step 10 — Return verdict to user
+### Step 11 — Return verdict
+
+Return a structured verdict block to the main thread. Do not surface this to the user directly — the main thread handles that.
 
 **If the take failed:**
 
-Surface a clear summary:
-
 ```
-Take <NNN> — FAIL
+VERDICT: FAIL
+TAKE: <NNN>
+SCENE: <scene-name>
 
-The following issues must be resolved before the next take:
-
-<Next Take Instructions, numbered>
-
-Run /slated:shoot-take <scene-name> to begin take <NNN+1>.
-Or run /slated:shoot-scene <scene-name> to let the director iterate automatically.
+NEXT_TAKE_INSTRUCTIONS:
+<numbered list of required changes, actor-attributed>
 ```
-
-Stop here. Do not proceed automatically.
 
 **If the take passed:**
 
-Surface a clear summary:
-
 ```
-Take <NNN> — PASS
-
-All objectives met. Scene is ready for completion.
-
-Run /slated:wrap-scene <scene-name> to produce wrap.md and update the storyboard.
+VERDICT: PASS
+TAKE: <NNN>
+SCENE: <scene-name>
+SCENE_BRANCH: scene/<scene-name>
 ```
-
-Stop here.
 
 ---
 
 ## Output
 
 - `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` — take file with Files Changed, Actor Summary, Director's Notes, Writer's Notes, and Next Take Instructions (if failed)
-- `.claude/slated/scenes/scene-<name>/manuscript.md` — updated by the writer if manuscript issues were identified (Step 7)
-- Verdict returned to user: `pass` or `fail` with a summary of issues (if failed) and the next action to take
+- `.claude/slated/scenes/scene-<name>/manuscript.md` — updated by the writer if manuscript issues were identified (Step 9)
+- Role and background files — updated by the casting director if violations were identified (Step 7); each update appends a row to the file's `## Refinement Log` section
+- Verdict returned to main thread: structured verdict block (Step 11); main thread surfaces the result to the user
 
 ---
 
@@ -212,8 +292,13 @@ Stop here.
 - Never auto-proceed to another take — always stop and return control to the user
 - Never approve a take where an actor violated their role's constraints, even if the output appears correct
 - If a previous take exists, always pass the take file path to each actor — never run a subsequent take without the actor having access to their own prior notes
-- Never merge a take branch into the main branch without a passing verdict — a failing take's worktree is always force-removed without merging
-- Always clean up the worktree (Step 8) before returning the verdict to the user — never leave an orphaned worktree or stale take branch
+- Never create a take worktree directly from main — always create or reuse the scene branch (`scene/<scene-name>`) first and branch the take off of it
+- Never merge a passing take into main — passing takes merge into the scene branch only; the scene branch is the PR branch and is never auto-merged to main
+- Always clean up the worktree (Step 10) before returning the verdict — never leave an orphaned worktree or stale take branch
 - Never allow actors to write to `.claude/slated/` inside the worktree — actors are constrained to `plugin/` within the worktree; framework artefacts are never produced in a worktree context
 - Never write the take file inside the worktree — the take file is always written to the main tree path
 - Never infer the file list from actor output — always derive it from `git status --short` in the worktree (Step 3); actor descriptions may be incomplete or imprecise
+- Never skip Step 7 when role or background violations are found — role and background issues must be resolved inline before the take file is written, not deferred to the next take
+- Never allow the casting director to apply a change that reverses a logged refinement without explicit user confirmation — if a conflict is detected, use AskUserQuestion to surface it before proceeding
+- Never proceed past Step 7 while a conflict is unresolved — the user must explicitly confirm how to handle it before the process continues
+- The director agent never surfaces verdicts or summaries directly to the user — it returns the structured verdict block and the main thread handles all user-facing output

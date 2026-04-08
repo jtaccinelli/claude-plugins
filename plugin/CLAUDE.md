@@ -94,6 +94,7 @@ Cast roles are project-specific and are not bundled with the framework. They mus
 | Skill | Expected Role | Purpose |
 |---|---|---|
 | `/slated:init` | `casting-director` | Bootstrap global framework directories (`~/.claude/slated/roles/`, `~/.claude/slated/backgrounds/`) on a new device |
+| `/slated:update` | `casting-director` | Overwrite local crew role files with the latest bundled definitions — run after pulling framework changes |
 | `/slated:produce-project` | `producer` | Gate production readiness — verify backgrounds and roles, author the set outline, scaffold project directories |
 | `/slated:onboard-project` | `casting-director` | Bring an existing project into the framework — scan the codebase, draft backgrounds from discovered patterns, define cast roles through interview, and author a retroactive set outline |
 | `/slated:build-set` | `set-designer` | Build the project scaffold from the set outline |

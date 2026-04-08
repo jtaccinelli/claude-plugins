@@ -61,6 +61,29 @@ The step-by-step sequence of work this scene requires. Each action is assigned t
 ---
 
 <!--
+  The writer replaces this comment block and the stub below with pre-shoot review feedback
+  if the review loop flags issues. If the review returned clean, remove this section entirely.
+-->
+
+## Pre-Shoot Review
+
+> No review feedback recorded. Remove this section if the pre-shoot review returned clean.
+
+### Director — Role Assessment
+
+| Role | Finding |
+|---|---|
+| `<role-name>` | <specific gap in role definition> |
+
+### Actor Assumptions
+
+| Actor | Shot | Assumption | Category |
+|---|---|---|---|
+| `actor-1` | Shot 1 | <assumption text> | ROLE GAP / MANUSCRIPT GAP |
+
+---
+
+<!--
   The director replaces this entire comment block and the stub below with the completed
   Completion Record when the scene is marked complete. Do not populate it manually during drafting.
 -->

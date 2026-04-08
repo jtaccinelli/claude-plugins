@@ -101,7 +101,71 @@ Once confirmed, create the scene directory and files:
 
 Use the manuscript template structure, including the HTML comment block and stub placeholder for the Completion Record — do not populate the record data. The director replaces the comment and stub with the completed Completion Record during finalisation.
 
-### Step 8 — Dispatch the visualiser
+### Step 8 — Pre-shoot review
+
+Run the review loop to validate the manuscript before it reaches the shoot stage. This step is fully automatic — no user intervention at any point.
+
+Resolve role file paths before starting: for each role in the cast, check `.claude/slated/roles/role-<name>.md` (project-level) first, then `~/.claude/slated/roles/role-<name>.md` (global). Use whichever is found first.
+
+#### Part 1 — Director role review loop
+
+Repeat until the director returns `PASS` or 3 iterations have completed:
+
+1. Dispatch the actor agent with `--role director`. Pass:
+   - The path to the manuscript
+   - The resolved paths to all role files in the cast
+   - An instruction to evaluate whether each role's definition gives the actor enough to execute the task described without guessing — not whether the role is wrong for the job, but whether it is sufficiently detailed for this specific requirement
+   - An instruction to return a structured verdict: `PASS` if all roles are adequate, or `FAIL` with specific per-role findings describing exactly what is missing
+
+2. If `FAIL`: dispatch the actor agent with `--role casting-director`. Pass:
+   - The path to the manuscript
+   - The resolved paths to the flagged role files only
+   - The director's findings for each flagged role, verbatim
+   - An instruction to revise each flagged role definition in place to address the specific gaps — not to rewrite the role wholesale, only to add the missing detail
+
+   Wait for the casting-director to complete. Use the updated role files in the next iteration.
+
+3. If `PASS`: exit the loop and proceed to Part 2.
+
+If the iteration cap is reached without `PASS`: collect the director's final findings and skip Part 2. Proceed to the Outcome step.
+
+#### Part 2 — Actor assumption review
+
+For each actor in the cast, dispatch the actor agent with `--role <role-name> --backgrounds <bg-list>`. Pass:
+- The path to the manuscript
+- The actor's assigned shots only (extracted from the Actions section)
+- An instruction to outline every assumption they would need to make to complete their shots — places where the manuscript does not give them enough to act without deciding for themselves
+
+Collect the assumption list returned by each actor.
+
+#### Part 3 — Director evaluation of assumptions
+
+Dispatch the actor agent with `--role director`. Pass:
+- The path to the manuscript
+- The resolved paths to all role files in the cast
+- All actor assumption reports from Part 2
+- An instruction to categorise each assumption as one of:
+  - `ROLE GAP` — the role definition should specify how to handle this
+  - `MANUSCRIPT GAP` — the manuscript action is underspecified; the writer needs to add detail
+  - `ACCEPTABLE` — a reasonable inference that does not warrant a change
+- An instruction to return a structured verdict: `CLEAN` if no ROLE GAP or MANUSCRIPT GAP findings exist, or `FLAGGED` with each non-acceptable item categorised and attributed to actor and shot
+
+#### Outcome
+
+If the director role review loop ended with findings (cap reached), or Part 3 returned `FLAGGED`:
+
+Dispatch the actor agent with `--role writer`. Pass:
+- The path to the manuscript
+- All findings: director role assessment (if any) and categorised actor assumptions (if any)
+- An instruction to replace the `## Pre-Shoot Review` section in the manuscript with the consolidated feedback — populating the Director Role Assessment table and the Actor Assumptions table as applicable, and removing the HTML comment placeholder
+
+If all parts returned clean verdicts, remove the Pre-Shoot Review section stub from the manuscript — it serves no purpose if the review passed.
+
+Either way, proceed to Step 9.
+
+---
+
+### Step 9 — Dispatch the visualiser
 
 Spawn a sub-agent using the actor agent:
 
@@ -124,11 +188,12 @@ Wait for the visualiser to complete before proceeding.
 
 ## Output
 
-- `.claude/slated/scenes/scene-<name>/manuscript.md` — complete manuscript at `confirmed` status
+- `.claude/slated/scenes/scene-<name>/manuscript.md` — complete manuscript at `confirmed` status; Pre-Shoot Review section populated if issues were found, removed if clean
 - `.claude/slated/scenes/scene-<name>/takes/` — empty directory ready for take files
 - `.claude/slated/scenes/storyboard.md` — updated Pending section
+- Role files in the cast may be revised in place by the casting-director during the pre-shoot review loop
 
-Report the scene folder path, the number of actors cast, and the number of objectives defined.
+Report the scene folder path, the number of actors cast, the number of objectives defined, and the pre-shoot review outcome (clean or flagged with a summary count of findings).
 
 ---
 
@@ -139,3 +204,5 @@ Report the scene folder path, the number of actors cast, and the number of objec
 - Never assign an action to a role whose constraints prohibit it
 - Never write objectives that cannot be verified by observation
 - Never populate the Completion Record data in a newly written manuscript — include the HTML comment block and stub as placeholders only
+- Never prompt the user during the pre-shoot review loop — it runs fully automatically
+- Never skip the pre-shoot review — it runs after every confirmed manuscript before the visualiser is dispatched
