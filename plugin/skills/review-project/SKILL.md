@@ -22,8 +22,7 @@ Conduct post-production QA across the entire project. The producer determines wh
    Set: reviewed ✓
    Scenes: <N> reviewed ✓
    ```
-5. Confirm the application is running locally — the interactive track requires a live app; if it is not running, surface this and wait before proceeding
-6. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; hold all available for convention checks across all reviews
+5. Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; hold all available for convention checks across all reviews
 
 ---
 
@@ -54,6 +53,8 @@ Flag every deviation. Partial compliance is not compliance.
 
 #### Step 4 — Interactive verification
 
+Confirm the application is running locally. If it is not running, attempt to start it using the dev command in the project's `package.json` scripts. If it cannot be started, record `Application startup: fail` as a finding and proceed without the remaining checks in this step.
+
 Navigate the running application to confirm it starts, routes resolve, and the basic integration points function. This is not a feature test — the set has no user objectives. This is a structural check: the scaffold must be capable of supporting scene work immediately.
 
 Check:
@@ -64,7 +65,7 @@ Check:
 
 #### Step 5 — Write the set review
 
-Write `.claude/slated/set/review.md` using this structure:
+Write `.claude/slated/set/review.md` using this structure (reference template at `${CLAUDE_SKILL_DIR}/../../templates/scenes/review.md`):
 
 ```markdown
 # Set Review
@@ -159,6 +160,8 @@ For every affected scene identified, assess whether this scene's changes are con
 
 #### Step 5 — Navigate the application as a user
 
+Confirm the application is still running before beginning this step — if it has stopped, surface this to the user and wait before proceeding.
+
 Approach this as a user encountering the application for the first time — not as a technician inspecting implementation.
 
 If browser automation is unavailable, surface a manual verification checklist and wait for the user to report results:
@@ -185,11 +188,11 @@ Note any visual, functional, or navigational issues not captured in the objectiv
 
 #### Step 6 — Write the scene review
 
-Write `.claude/slated/scenes/scene-<name>/review.md` using the scene review template structure.
+Write `.claude/slated/scenes/scene-<name>/review.md` using the scene review template structure (template at `${CLAUDE_SKILL_DIR}/../../templates/scenes/review.md`).
 
 The scene review **passes** only if all objectives are met or confirmed through live testing, no convention deviations were found, no cross-scene inconsistencies were found, and no broken flows were found.
 
-If flagged: overwrite the `review.md` just written (it is the canonical finding record for this run), set the manuscript `**Status**` field back to `in-progress`, and dispatch the visualiser to move the scene from Completed back to Pending in `storyboard.md` — this restores the scene to its pre-wrap state so the re-shoot and re-wrap flow works correctly. Surface findings to the user and instruct them to run `/slated:shoot-take <scene-name>` or `/slated:shoot-scene <scene-name>` to action the findings, then re-run `/slated:review-project` after the scene is re-finalised.
+If flagged: overwrite the `review.md` just written (it is the canonical finding record for this run), set the manuscript `**Status**` field back to `in-progress`, and dispatch the visualiser to move the scene from Completed back to Pending in `storyboard.md` — this restores the scene to its pre-wrap state so the re-shoot and re-wrap flow works correctly. The existing `wrap.md` remains in place — it will be overwritten when the scene is re-wrapped after corrections; a future re-run of `/slated:review-project` will read the new `wrap.md` from the corrected re-wrap. Surface findings to the user and instruct them to run `/slated:shoot-take <scene-name>` or `/slated:shoot-scene <scene-name>` to action the findings, then re-run `/slated:review-project` after the scene is re-finalised.
 
 Do not proceed to the next scene until the current scene's review file is written.
 

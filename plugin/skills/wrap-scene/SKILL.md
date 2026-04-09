@@ -40,10 +40,10 @@ Replace the HTML comment block and stub placeholder in `manuscript.md` with the 
 
 ### Step 3 — Produce wrap.md
 
-Write `.claude/slated/scenes/scene-<name>/wrap.md` using this structure:
+Write `.claude/slated/scenes/scene-<name>/wrap.md` using this structure (reference template at `${CLAUDE_SKILL_DIR}/../../templates/scenes/wrap.md`):
 
 - **Description**: 2–4 sentences in plain language — what capability was added, what problem was solved, or what structure was established. No implementation detail. Written to be understood by an actor with no prior context on this scene.
-- **Files**: a complete list of every file created or meaningfully modified during the scene, grouped by concern (e.g. "Schema & Handlers", "Routes", "Components"). Draw this from the actor output reviewed across all takes.
+- **Files**: a complete list of every file created or meaningfully modified during the scene, grouped by concern (e.g. "Schema & Handlers", "Routes", "Components"). Draw this from the **Files Changed** sections of all take files — the `git status --short` output recorded in each take is the authoritative record.
 - **Editor Notes**: any shared or foundational artefacts this scene modified — entry points, shared handlers, configuration files, design system primitives — and any implicit dependencies introduced. Consider: what could a future scene inadvertently break if they touched the same files? If the scene only created new files with no effect on shared artefacts, omit this section.
 
 ### Step 4 — Invalidate prior review
@@ -86,6 +86,8 @@ Role improvements identified. Run the following before the next scene is planned
 - /slated:refine-role <role-name> — <one-line summary of the improvement needed>
 - /slated:refine-background <background-name> — <one-line summary of the improvement needed>
 ```
+
+Then use `AskUserQuestion` to pause before returning: "Role improvements were identified during this scene. Review the notes above and confirm you have noted them before this scene is closed." Do not return until the user acknowledges.
 
 ---
 

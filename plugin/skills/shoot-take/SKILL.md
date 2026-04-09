@@ -56,10 +56,10 @@ For each actor in the Cast table, spawn a sub-agent using the actor agent:
   - The specific shot(s) assigned to this actor, verbatim from the manuscript
   - The absolute path to the worktree created in Pre-work step 8 as the actor's working directory — all file reads and writes must occur within this path
   - The path to the scene directory within the worktree (i.e. `<worktree-path>/.claude/slated/scenes/scene-<name>/`) so the actor can read/write scene-relative files
-  - An explicit constraint: actors must write only under `plugin/` within the worktree — never to `.claude/slated/` inside the worktree or in the main tree
+  - An explicit constraint: actors must never write to `.claude/slated/` inside the worktree or in the main tree — framework artefacts are never produced in a worktree context
   - If a previous take exists, the path to the most recent take file in the main tree — instruct the actor to read it in full before beginning, paying particular attention to their own Director's Notes and the Next Take Instructions
 
-Dispatch shots sequentially by default. A shot is independent only if none of its actions reference the output of another shot in this take as a prerequisite — check the manuscript explicitly before deciding. If a shot is independent, it may be dispatched in parallel with others. If any dependency exists, the dependent shot must wait until the shot it depends on has completed.
+Dispatch shots sequentially by default. A shot is independent only if none of its actions reference the output of another shot in this take as a prerequisite AND no two shots would modify the same files — check both conditions explicitly against the manuscript before deciding. If a shot is independent, it may be dispatched in parallel with others. If any dependency or file conflict exists, the dependent shot must wait until the shot it depends on has completed.
 
 Wait for all actors to complete before proceeding.
 
@@ -150,7 +150,7 @@ If no role or background issues were identified in Step 5, skip this step.
 
 ### Step 8 — Write the take file
 
-Write the take file to the **main tree** path — not the worktree. The path is `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` relative to the repo root (not relative to the worktree root). Use the take template structure:
+Write the take file to the **main tree** path — not the worktree. The path is `.claude/slated/scenes/scene-<name>/takes/take-<NNN>.md` relative to the repo root (not relative to the worktree root). Use the take template structure (template at `${CLAUDE_SKILL_DIR}/../../templates/scenes/takes/take-001.md`):
 
 - **Files Changed** — the bullet list of file paths captured in Step 3, grouped by status (Added, Modified, Deleted); this is the canonical record of what changed in this take
 - **Actor Summary** — factual account of what each actor completed and skipped
@@ -241,7 +241,7 @@ Stop here.
 - Never skip the writer review — manuscript fidelity is not optional
 - Never skip dispatching the writer when manuscript issues are identified — unresolved issues compound across takes
 - Never write vague Director's Notes — every finding must have a rule, a location, and a required change
-- Never auto-proceed to another take — always stop and return control to the user
+- Never auto-proceed to another take — always stop and return control to the user (except when orchestrated by `/slated:shoot-scene`, which explicitly overrides this at Step 1.1)
 - Never approve a take where an actor violated their role's constraints, even if the output appears correct
 - If a previous take exists, always pass the take file path to each actor — never run a subsequent take without the actor having access to their own prior notes
 - Never create a take worktree directly from main — always create or reuse the scene branch (`scene/<scene-name>`) first and branch the take off of it
@@ -250,6 +250,6 @@ Stop here.
 - Never allow the casting-director to apply a change that reverses a logged refinement without explicit user confirmation — if a conflict is detected, use AskUserQuestion to surface it before proceeding
 - Never proceed past Step 7 while a conflict is unresolved — the user must explicitly confirm how to handle it before the process continues
 - Always clean up the worktree (Step 10) before returning the verdict to the user — never leave an orphaned worktree or stale take branch
-- Never allow actors to write to `.claude/slated/` inside the worktree — actors are constrained to `plugin/` within the worktree; framework artefacts are never produced in a worktree context
+- Never allow actors to write to `.claude/slated/` inside the worktree — framework artefacts are never produced in a worktree context
 - Never write the take file inside the worktree — the take file is always written to the main tree path
 - Never infer the file list from actor output — always derive it from `git status --short` in the worktree (Step 3); actor descriptions may be incomplete or imprecise

@@ -53,7 +53,7 @@ Present the mapping to the user in this format:
 ```
 Required technologies:
 - <technology> → background-<name>.md ✓
-- <technology> → background-<name>.md ✓
+- <technology> → background-<name>.md ⚠ (insufficient coverage for <specific gap>)
 - <technology> → NO BACKGROUND DEFINED ✗
 ```
 
@@ -66,7 +66,16 @@ The following technologies require background documents before production can pr
 Run /slated:establish-background for each before continuing.
 ```
 
-Do not proceed until every required technology has a background document.
+**If a background exists but its coverage is insufficient** (for example, a `cloudflare` background that does not document D1 databases when D1 is required for this project): treat it as `⚠ insufficient`. Surface the specific missing coverage as a gap:
+
+```
+The following backgrounds exist but require updates before production can proceed:
+- background-<name>.md — missing coverage for: <specific gap>
+
+Run /slated:refine-background <name> to address the gap, or explicitly accept it before continuing.
+```
+
+Do not proceed until every required technology either has sufficient background coverage or the gap has been explicitly accepted by the user.
 
 ### Step 4 — Verify crew roles
 

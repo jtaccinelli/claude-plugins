@@ -18,7 +18,7 @@ Run a full scene from first take to completion. The director executes takes in s
 3. Confirm the manuscript status is `confirmed` or `in-progress` — if neither, stop and report that the scene is not ready to shoot
 4. Glob `.claude/slated/scenes/scene-<name>/takes/take-*.md` — if any take files exist, read them all in full before proceeding; the director must enter the loop with full context on what has already been attempted and why it failed
 5. If the most recent take file (if any) has status `pass`, skip the take loop entirely — proceed directly to Step 2 (wrap the scene); do not run another take
-6. Load the shoot-take and wrap-scene skills — these are the two processes this skill orchestrates
+6. Read the shoot-take and wrap-scene skills before proceeding — these are the two processes this skill orchestrates. Find them at `${CLAUDE_SKILL_DIR}/../shoot-take/SKILL.md` and `${CLAUDE_SKILL_DIR}/../wrap-scene/SKILL.md`
 
 ---
 

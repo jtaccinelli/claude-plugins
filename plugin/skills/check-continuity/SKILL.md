@@ -13,7 +13,7 @@ Log work that happened outside the framework — changes made directly to the co
 
 ## Pre-work
 
-1. Read the current `storyboard.md`. Identify:
+1. Read `.claude/slated/scenes/storyboard.md`. Identify:
    - The names of all existing scenes referenced in the Pending and Completed sections — these are the known scene slugs.
    - Whether a "Recorded" section already exists in the document.
 2. If `$ARGUMENTS` is provided, use it as the starting description of the change. Skip to Step 1 with this description in hand.

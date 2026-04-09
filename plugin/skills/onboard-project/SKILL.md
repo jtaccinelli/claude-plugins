@@ -68,6 +68,25 @@ Ensure the following project-level Slated directories exist, creating any that a
 
 Do not modify or delete any files inside directories that already exist.
 
+If `.claude/slated/scenes/storyboard.md` does not exist, create it with the following initial structure:
+
+```markdown
+# Storyboard
+
+Navigation map of all scenes in this project. Maintained by the visualiser.
+
+## Pending
+
+Scenes confirmed or in progress.
+
+| Scene | Status | Requirement |
+|---|---|---|
+
+## Completed
+
+Scenes wrapped and ready for review.
+```
+
 ### Step 3 — Draft and confirm backgrounds
 
 For each technology in the confirmed technology map, check whether a background document already exists in the catalogue loaded during Pre-work.
@@ -169,5 +188,5 @@ Report all file paths written at completion.
 - Never write the set outline before backgrounds and roles are confirmed
 - Never invent cast roles — only derive them from observed responsibility structure in the scanned codebase
 - Never write a background without presenting each section (Semantics, Structure, Function) separately for review before writing
-- Never write a cast role directly — always dispatch a casting-director sub-agent using the `/slated:cast-role` process
+- Follow the `/slated:cast-role` interview process directly for each confirmed role — the casting-director running this skill conducts the interview inline without spawning a sub-agent
 - Never mark coverage as sufficient for an existing background without checking what was observed against what is documented

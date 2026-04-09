@@ -100,7 +100,7 @@ Once confirmed, create the scene directory and files:
 2. Create `.claude/slated/scenes/scene-<name>/takes/` directory
 3. Write `.claude/slated/scenes/scene-<name>/manuscript.md` with status set to `confirmed`
 
-Use the manuscript template structure, including the HTML comment block and stub placeholder for the Completion Record — do not populate the record data. The director replaces the comment and stub with the completed Completion Record during finalisation.
+Use the manuscript template structure (template at `${CLAUDE_SKILL_DIR}/../../templates/scenes/manuscript.md`), including the HTML comment block and stub placeholder for the Completion Record — do not populate the record data. The director replaces the comment and stub with the completed Completion Record during finalisation.
 
 ### Step 8 — Pre-shoot review
 
@@ -160,7 +160,7 @@ Dispatch the actor agent with `--role writer`. Pass:
 - All findings: director role assessment (if any) and categorised actor assumptions (if any)
 - An instruction to replace the `## Pre-Shoot Review` section in the manuscript with the consolidated feedback — populating the Director Role Assessment table and the Actor Assumptions table as applicable, and removing the HTML comment placeholder
 
-If all parts returned clean verdicts, remove the Pre-Shoot Review section stub from the manuscript — it serves no purpose if the review passed.
+If all parts returned clean verdicts, remove everything from the `<!--` comment block above `## Pre-Shoot Review` through to the end of the `### Actor Assumptions` table inclusive — this entire block serves no purpose if the review passed.
 
 Either way, proceed to Step 9.
 

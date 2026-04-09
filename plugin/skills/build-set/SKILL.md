@@ -16,7 +16,7 @@ On subsequent runs, the set-designer operates incrementally — creating missing
 ## Pre-work
 
 1. Read `.claude/slated/set/outline.md` in full — this is the sole source of truth for all scaffolding decisions; if it does not exist, stop and instruct the user to run `/slated:produce-project` first.
-2. **Detect run mode**: Check whether `CLAUDE.md` exists in the project root.
+2. **Detect run mode**: Check whether `.claude/slated/set/locations.md` exists in the project.
    - If it does not exist: this is an **initial build** — create all files from scratch.
    - If it does exist: this is an **incremental build** — scan for missing or outdated artefacts and update accordingly. Do not delete or overwrite files that are not governed by the outline (source files that actors have written remain untouched).
 3. If `.claude/slated/set/review.md` exists, delete it — the scaffold is being (re)built and the prior review is no longer valid.
@@ -110,7 +110,28 @@ Derive all content from the set outline and what was built:
 
 Do not include framework meta-documentation. Do not duplicate what background documents already cover in detail — reference the pattern, not the recipe.
 
-### Step 5 — Write the pilot
+### Step 5 — Initialise the storyboard
+
+On an **initial build** only: write `.claude/slated/scenes/storyboard.md` with the following structure. If the file already exists, skip this step.
+
+```markdown
+# Storyboard
+
+Navigation map of all scenes in this project. Maintained by the visualiser.
+
+## Pending
+
+Scenes confirmed or in progress.
+
+| Scene | Status | Requirement |
+|---|---|---|
+
+## Completed
+
+Scenes wrapped and ready for review.
+```
+
+### Step 6 — Write the pilot
 
 Write `.claude/slated/scenes/pilot.md`. This is a lightweight scene backlog — a starting point for the writer when planning the first scenes. It is not a manuscript and contains no cast, objectives, or actions.
 
@@ -149,6 +170,7 @@ This file is a starting point, not a plan. The writer will make their own castin
 - `.claude/slated/set/locations.md` — named shot locations for manuscript authors; regenerated on every run
 - `CLAUDE.md` — project context file written for future actors; regenerated on every run
 - `.claude/slated/scenes/pilot.md` — suggested scene backlog for the writer; created on initial build, appended on incremental build if new suggestions exist
+- `.claude/slated/scenes/storyboard.md` — scene navigation map; created on initial build only
 
 Report the full list of files created and updated, grouped by concern, and note which background document each group was derived from. For incremental builds, separately list files that were skipped because they already existed. If any conflict arose between the outline and a background, document it so it can inform future updates to both.
 
@@ -164,6 +186,7 @@ Report the full list of files created and updated, grouped by concern, and note 
 - Never skip writing `CLAUDE.md` — project context is a required output of every build
 - Never skip writing `.claude/slated/set/locations.md` — shot locations are a required output of every build
 - Never skip writing `.claude/slated/scenes/pilot.md` on an initial build
+- Never skip writing `.claude/slated/scenes/storyboard.md` on an initial build — skip only if it already exists
 - Never make decisions the outline deferred — if the outline is ambiguous, ask rather than guess
 - Never overwrite an existing source file on an incremental build — only config files may be updated, and only where the outline specifies a different value
 - Never use absolute paths in `locations.md` — all paths must be relative to the project root

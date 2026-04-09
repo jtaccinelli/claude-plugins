@@ -26,12 +26,16 @@ If `--role` is not provided, stop and output:
 Actor cannot proceed: no role specified. Provide --role <role-name>.
 ```
 
+### Step 1a — Resolve the home directory
+
+Run `echo $HOME` and capture the result. Use this resolved path in place of `~` in all path lookups below.
+
 ### Step 2 — Load the role
 
 Look up the role file using the following precedence:
 
 1. `.claude/slated/roles/role-<name>.md` — project-specific override (check first)
-2. `~/.claude/slated/roles/role-<name>.md` — global Slated role
+2. `$HOME/.claude/slated/roles/role-<name>.md` — global Slated role (using the resolved home directory from Step 1a)
 
 Read the first file found. If neither exists, report the problem and stop:
 
@@ -56,7 +60,7 @@ Do not summarise or acknowledge the role aloud. Simply become it.
 For each name in `--backgrounds`, look up the background file using the following precedence:
 
 1. `.claude/slated/backgrounds/background-<name>.md` — project-specific override (check first)
-2. `~/.claude/slated/backgrounds/background-<name>.md` — global Slated background
+2. `$HOME/.claude/slated/backgrounds/background-<name>.md` — global Slated background (using the resolved home directory from Step 1a)
 
 Read the first file found. If neither exists, report the missing background and stop before proceeding.
 
