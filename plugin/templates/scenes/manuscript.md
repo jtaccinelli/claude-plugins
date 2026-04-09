@@ -16,6 +16,16 @@ The actors required to run this scene, and what each one must be loaded with.
 
 ---
 
+## Shot Locations
+
+Key file and directory paths actors should reference when executing this scene. Derived from `.claude/slated/set/locations.md` — include only entries relevant to this scene's work.
+
+| Name | Path |
+|---|---|
+| `<location-name>` | `<path/relative/to/project>` |
+
+---
+
 ## Resources
 
 External platforms, APIs, services, or tools this scene depends on.

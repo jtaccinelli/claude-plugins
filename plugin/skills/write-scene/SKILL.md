@@ -18,6 +18,7 @@ Read the available roles and backgrounds so casting decisions are grounded in wh
 - Use Bash (`ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`) to list global roles, and Glob `.claude/slated/roles/role-*.md` for project-level ones — merge both results, with project-level taking precedence; read each to understand available roles and their expertise
 - Use Bash (`ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`) to list global backgrounds, and Glob `.claude/slated/backgrounds/background-*.md` for project-level ones — merge both results, with project-level taking precedence; read each in full; background content determines relevance, not just name
 - Read `.claude/slated/scenes/storyboard.md` — understand what scenes already exist to avoid duplication
+- If `.claude/slated/set/locations.md` exists, read it — the named shot locations it contains must be used when specifying actor actions so actors have unambiguous file paths to work from
 
 ---
 
@@ -200,6 +201,7 @@ Report the scene folder path, the number of actors cast, the number of objective
 ## Rules
 
 - Never write files before the user confirms the manuscript
+- Never leave the Shot Locations section empty if `.claude/slated/set/locations.md` exists — always include the entries relevant to this scene's work
 - Never cast a role that does not exist in the merged role catalogue — flag the gap instead
 - Never assign an action to a role whose constraints prohibit it
 - Never write objectives that cannot be verified by observation
