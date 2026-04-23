@@ -192,12 +192,17 @@ Do not proceed to Step 5 until all accepted roles have been written.
 
 ### Step 5 — Author the locations document
 
-Perform as DOP (using `/slated:perform dop`) to scan the actual project structure and produce a candidate `locations.md`. Follow the Scout process:
+Spawn an actor with `--role dop` to scan the project structure and produce a candidate `locations.md`. Include in the agent prompt:
 
-1. Walk the project structure; identify every meaningful directory and named file entry point
-2. Draft the document — group entries by concern; label each with a short description
-3. Use AskUserQuestion to surface the draft for user confirmation before writing
-4. Write `.claude/slated/locations.md` once confirmed
+- A summary of the project structure observed during scanning in Step 1
+- A list of the confirmed cast roles and backgrounds from Steps 3 and 4
+- Instructions to walk the project structure, identify every meaningful directory and named file entry point, and draft a candidate `locations.md` following the standard format (Name, Path, Description table) — **returning the full draft as text** rather than writing the file directly
+
+Wait for the DOP actor to complete and collect the returned candidate document.
+
+Use AskUserQuestion to surface the draft for user confirmation: "Does this locations list look correct before I write it?"
+
+Once confirmed, write `.claude/slated/locations.md` to the project root.
 
 ---
 

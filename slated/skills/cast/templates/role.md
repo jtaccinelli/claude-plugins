@@ -51,3 +51,10 @@ Note: for cast roles, constraints must not name other specific roles. Scope boun
 ## Interactions
 
 <How this role interfaces with others in a scene. What it typically receives as input, what it produces as output, and what its position in the workflow is. For cast roles, describe coordination in abstract terms — do not name specific co-star roles, because a cast role does not know who it will be working alongside until it reads the manuscript.>
+
+---
+
+## Refinement Log
+
+| Date | Scene / Take | Finding | Change Summary |
+|---|---|---|---|
