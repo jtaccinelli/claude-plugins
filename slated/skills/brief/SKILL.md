@@ -17,12 +17,14 @@ Establish or sharpen a background. A successful run leaves the background file c
 
 2. Resolve the home directory: run `echo $HOME`.
 
-3. Discover all existing backgrounds:
+3. Read `${CLAUDE_SKILL_DIR}/background-background.md` in full. Absorb it as domain knowledge — this is the schema and minimum standard against which all backgrounds in this skill are evaluated and drafted.
+
+4. Discover all existing backgrounds:
    - Project-level: Glob `.claude/slated/backgrounds/background-*.md`
    - Global: run `ls $HOME/.claude/slated/backgrounds/background-*.md 2>/dev/null`
    - Merge both, with project-level taking precedence on name collision. Read each in full to understand what is already documented and where its edges are.
 
-4. Parse `$ARGUMENTS`:
+5. Parse `$ARGUMENTS`:
    - If `$ARGUMENTS` matches an existing background name (after stripping `background-` prefix and `.md` extension from the catalogue) → proceed to the **Refinement path**
    - If `$ARGUMENTS` is provided but does not match an existing background name → treat it as a summary and proceed to the **Summary draft path**
    - If `$ARGUMENTS` is empty → proceed to the **Interactive path**

@@ -17,12 +17,14 @@ Define or sharpen a cast role. A successful run leaves the role file complete, a
 
 2. Resolve the home directory: run `echo $HOME`.
 
-3. Discover all existing cast roles:
+3. Read `${CLAUDE_SKILL_DIR}/background-role.md` in full. Absorb it as domain knowledge — this is the schema and minimum standard against which all roles in this skill are evaluated and drafted.
+
+4. Discover all existing cast roles:
    - Project-level: Glob `.claude/slated/roles/role-*.md`
    - Global: run `ls $HOME/.claude/slated/roles/role-*.md 2>/dev/null`
    - Merge both, with project-level taking precedence on name collision. Read each in full to understand what roles already exist, what they cover, and where their edges are.
 
-4. Parse `$ARGUMENTS`:
+5. Parse `$ARGUMENTS`:
    - If `$ARGUMENTS` matches an existing role name (after stripping `role-` prefix and `.md` extension from the catalogue) → proceed to the **Refinement path**
    - If `$ARGUMENTS` is provided but does not match an existing role name → treat it as a summary and proceed to the **Summary draft path**
    - If `$ARGUMENTS` is empty → proceed to the **Interactive path**

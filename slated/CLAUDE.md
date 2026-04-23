@@ -12,6 +12,13 @@ The framework distinguishes between **global** resources (shared across all proj
 
 Crew roles are bundled with the Perform skill and are always available regardless of project. They are immutable from within the framework — editable only by hand outside of it.
 
+Some skills also carry **skill-local backgrounds** — background documents co-located within the skill directory and loaded automatically during that skill's pre-work. These are private to the skill that owns them; they do not appear in the general background catalogue and cannot be loaded via `perform --backgrounds`. Current skill-local backgrounds:
+
+| File | Skill | Purpose |
+|---|---|---|
+| `slated/skills/cast/background-role.md` | `/slated:cast` | Schema and minimum standard for role files |
+| `slated/skills/brief/background-background.md` | `/slated:brief` | Schema and minimum standard for background files |
+
 ### Global (`~/.claude/`)
 
 | Folder | Purpose |
@@ -82,7 +89,7 @@ Roles divide into two categories:
 |---|---|
 | `director` | Evaluates actor output against role definitions and background conventions. Governs cast role quality — drafting, refining, and resolving role gaps during takes. Most naturally operates in the main context. |
 | `writer` | Creates manuscripts from requirements. Assesses manuscript fidelity during takes. Revises manuscripts when gaps are identified. |
-| `producer` | Gates project initialisation — verifying backgrounds, cast roles, and confirming the locations document before any scene work begins. Does not build, does not plan scenes, does not review completed work. |
+| `producer` | Gates project initialisation — verifying backgrounds, cast roles, and confirming the locations document before any scene work begins. Does not build, does not plan scenes. |
 | `dop` | Authors and maintains `locations.md` — the named structural map of the project. Deployed by Scout and by Produce on the existing-project path. |
 
 ### Cast
