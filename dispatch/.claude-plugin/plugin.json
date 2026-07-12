@@ -1,0 +1,12 @@
+{
+  "name": "dispatch",
+  "version": "1.0.0",
+  "description": "A agentic coordination framework with a strong focus on behavioural constraints and validation",
+  "author": {
+    "name": "Jordan Accinelli",
+    "email": "info@jtaccinelli.com.au",
+    "url": "https://jtaccinelli.com.au"
+  },
+  "agents": "./agents/",
+  "skills": "./skills/"
+}

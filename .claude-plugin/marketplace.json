@@ -10,6 +10,11 @@
       "name": "slated",
       "source": "./slated",
       "description": "Film-production-inspired agentic coordination framework for Claude Code"
+    },
+    {
+      "name": "dispatch",
+      "source": "./dispatch",
+      "description": "Agentic coordination framework with a strong focus on behavioural harnesses"
     }
   ]
 }
