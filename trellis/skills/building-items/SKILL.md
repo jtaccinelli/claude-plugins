@@ -54,7 +54,7 @@ Run `git -C <worktree-path> status --short`. Parse into a structured Added/Modif
 
 ### Step 4 — Reviewing Fidelity
 
-As **coordinator**, run [Reviewing Fidelity](../../agents/coordinator/actions/reviewing-fidelity.md): compare the delivered artifact (from the worktree) against the item's ratified `CONTRACT.md` output shape. Record the verdict and, on failure, the specific gap: what shape was expected, what was delivered, and where.
+As **coordinator**, run [Reviewing Fidelity](../../agents/coordinator/actions/reviewing-fidelity.md): compare the delivered artifact (from the worktree) against the item's ratified `CONTRACT.md` output shape and against every pattern already logged in this cell's `AGENT.md` Learned Patterns. Record the verdict and, on failure, the specific gap: what was expected — citing the contract or the specific logged pattern — what was delivered, and where.
 
 ### Step 5 — Write the attempt file
 
@@ -67,7 +67,7 @@ Write `.claude/trellis/<concern>/<NN-layer>/<item-slug>/attempts/ATTEMPT_<NNN>.m
 
 ### Step 6 — On pass: self-document and merge
 
-1. Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, to run [Self-Documenting](../../agents/cell-agent/actions/self-documenting.md) in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the cell's `INVENTORY.md`. Set `CONTRACT.md` status to `satisfied`.
+1. Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, to run [Self-Documenting](../../agents/cell-agent/actions/self-documenting.md) in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the cell's `INVENTORY.md`, and log or reconcile any pattern finding into the cell's `AGENT.md` Learned Patterns. Set `CONTRACT.md` status to `satisfied`.
 2. Merge into the request branch: `git checkout request/<slug> && git merge attempt/<slug>-<cell>-<item-slug>-<NNN> --no-ff -m "item(<cell>/<item-slug>): merge attempt-<NNN>"`. Return to the original branch: `git checkout -`.
 3. Remove the worktree: `git worktree remove .worktrees/attempt-<slug>-<cell>-<item-slug>-<NNN>`. Delete the attempt branch: `git branch -d attempt/<slug>-<cell>-<item-slug>-<NNN>`.
 4. Mark this item complete; if any other item was waiting on this one as a dependency and now has all dependencies satisfied, it becomes eligible for the current or next wave.
@@ -131,6 +131,7 @@ If any items are BLOCKED, list them and use `AskUserQuestion` to pause: "Some it
 - `.claude/trellis/<cell>/<item>/attempts/ATTEMPT_<NNN>.md` — attempt file per attempt executed
 - `.claude/trellis/<cell>/<item>/{CONTRACT,USAGE,CHANGELOG,REFERENCES}.md` — updated on pass
 - `.claude/trellis/<cell>/INVENTORY.md` — regenerated on pass
+- `.claude/trellis/<cell>/AGENT.md` — Learned Patterns log appended on pass, only when a new pattern is confirmed
 - `.claude/trellis/requests/<slug>/SUMMARY.md` — written on wrap
 - PR opened from `request/<slug>` into `main` (or fallback instructions surfaced)
 

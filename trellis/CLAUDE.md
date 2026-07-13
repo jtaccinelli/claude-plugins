@@ -24,7 +24,7 @@ Bundled with the plugin, always available regardless of project:
 |---|---|
 | `.claude/trellis/MANIFEST.md` | Entry point every agent reads first |
 | `.claude/trellis/trellis.config.json` | Placement map (cell → real host path) + settings — the single source of truth for where code actually lives |
-| `.claude/trellis/<concern>/<NN-layer>/` | One of 18 cells — `AGENT.md`, `INVENTORY.md` (generated), `REQUESTS.md` |
+| `.claude/trellis/<concern>/<NN-layer>/` | One of 18 cells — `AGENT.md` (remit + Learned Patterns log), `INVENTORY.md` (generated), `REQUESTS.md` |
 | `.claude/trellis/<concern>/<NN-layer>/<item>/` | An item leaf — `CONTRACT.md`, `USAGE.md`, `CHANGELOG.md`, `REFERENCES.md` (generated), `attempts/` |
 | `.claude/trellis/<concern>/globals/` | The Globals cell for that concern — same file shape as a layer cell |
 | `.claude/trellis/requests/<slug>/` | One classified request's session record — `PLAN.md`, `SUMMARY.md` |
@@ -40,6 +40,7 @@ Bundled with the plugin, always available regardless of project:
 5. An **Item** is a single named thing living inside a cell — a component, a service, an endpoint — governed by its own `CONTRACT.md` / `USAGE.md` / `CHANGELOG.md`, with a `Source` pointer to the real code. Items are created lazily, only when the reuse guardrails hold.
 6. The **coordinator** classifies work and routes **contracts** between cells — the consumer always authors the contract; the provider returns a verdict (Met / Partial · additive / Partial · breaking / Unmet / Countered).
 7. Unresolved consumer/provider conflicts escalate to the user — the coordinator has no design authority and never breaks a design tie.
+8. Each cell also accumulates a **Learned Patterns** log in its own `AGENT.md` — naming, structure, and file-organisation conventions derived only from what the cell has actually built, never prescribed up front. The coordinator checks every build attempt against this log during Reviewing Fidelity, and the cell agent extends it during Self-Documenting. A pattern is never reversed silently — a change that contradicts a prior entry escalates to the user, the same discipline as a cast/background Refinement Log.
 
 ---
 

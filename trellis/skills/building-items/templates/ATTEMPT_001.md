@@ -33,13 +33,14 @@ A brief, factual record of what was built during this attempt.
 
 ## Coordinator's Fidelity Notes
 
-Assessment of whether the delivered artifact matches the ratified `CONTRACT.md` shape and landed at the mapped placement path. Not a behavioural or quality review.
+Assessment of whether the delivered artifact matches the ratified `CONTRACT.md` shape, landed at the mapped placement path, and is consistent with this cell's logged `AGENT.md` patterns. Not an open-ended quality review — every finding cites either the contract or a specific logged pattern.
 
 **Verdict**: pass | fail
 
 - **Finding**: <what was wrong, if anything>
-  **Ratified shape**: <from CONTRACT.md>
-  **Delivered shape**: <what was actually produced>
+  **Type**: shape | placement | pattern
+  **Expected**: <the ratified CONTRACT.md shape, or the specific AGENT.md Learned Patterns row — date, source item, pattern — being cited>
+  **Delivered**: <what was actually produced>
   **Location**: <file path>
   **Required change**: <exactly what must be different on the next attempt>
 
