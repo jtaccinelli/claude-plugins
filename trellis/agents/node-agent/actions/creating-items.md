@@ -19,4 +19,4 @@ If none hold, do not create — inline the implementation at the consumer instea
 
 If creating: scaffold the item leaf at `.claude/trellis/<this-node>/<item-slug>/` with `CONTRACT.md` and `USAGE.md` stubs (status `proposed`), from the templates at `trellis/skills/scoping-requests/templates/CONTRACT.md` and `trellis/skills/scoping-requests/templates/USAGE.md` (the plugin's fixed templates, not project-specific); the actual code and the rest of the governance files are produced by [Executing Build Attempts](executing-build-attempts.md) and [Self-Documenting](self-documenting.md).
 
-**Output**: a new item leaf scaffolded, or a logged/incremented request.
+**Report** (returned to the dispatcher): a new item leaf scaffolded, or a logged/incremented request.

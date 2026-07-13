@@ -42,6 +42,7 @@ Bundled with the plugin, always available regardless of project:
 6. The **coordinator** classifies work and routes **contracts** between nodes — the consumer always authors the contract; the provider returns a verdict (Met / Partial · additive / Partial · breaking / Unmet / Countered).
 7. Unresolved consumer/provider conflicts escalate to the user — the coordinator has no design authority and never breaks a design tie.
 8. Each node also accumulates a **Learned Patterns** log in its own `AGENT.md` — naming, structure, and file-organisation conventions derived only from what the node has actually built, never prescribed up front. The coordinator checks every build attempt against this log during Reviewing Fidelity, and the node agent extends it during Self-Documenting. A pattern is never reversed silently — a change that contradicts a prior entry escalates to the user, the same discipline as a cast/background Refinement Log.
+9. Every workflow runs like a real team, not a solo pass. A node agent is never just "run" — it's dispatched with a specific work order and expected to report back with something the dispatcher can act on: a verdict, a delivered artifact, a finding. Whenever multiple node agents' work is independent, they're dispatched together, at once, and every report is collected before the coordinator proceeds — never serialized just for convenience.
 
 ---
 
