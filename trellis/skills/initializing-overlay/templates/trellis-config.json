@@ -1,0 +1,25 @@
+{
+  "root": ".claude/trellis",
+  "sourceRoot": "<source-root, e.g. src>",
+  "placement": {
+    "presentation.element":   "<path, e.g. src/theme/{item}>",
+    "presentation.component": "<path, e.g. src/components/{item}>",
+    "presentation.module":    "<path, e.g. src/components/{item}>",
+    "presentation.feature":   "<path, e.g. src/features/{item}>",
+    "presentation.page":      "<path, e.g. src/app/{item}>",
+    "presentation.globals":   "<path, e.g. src/providers/{item}>",
+    "logic.element":          "<path, e.g. src/lib/{item}>",
+    "logic.component":        "<path, e.g. src/hooks/{item}>",
+    "logic.module":           "<path, e.g. src/services/{item}>",
+    "logic.feature":          "<path, e.g. src/features/{item}/logic>",
+    "logic.page":             "<path, e.g. src/app/{item}/handlers>",
+    "logic.globals":          "<path, e.g. src/stores/{item}>",
+    "data.element":           "<path, e.g. src/lib/api/{item}>",
+    "data.component":         "<path, e.g. src/lib/api/{item}>",
+    "data.module":            "<path, e.g. src/data/{item}>",
+    "data.feature":           "<path, e.g. src/data/{item}>",
+    "data.page":              "<path, e.g. src/app/api/{item}>",
+    "data.globals":           "<path, e.g. src/lib/api/{item}>"
+  },
+  "coreFiles": ["index.js", "index.ts", "index.jsx", "index.tsx", "index.css"]
+}
