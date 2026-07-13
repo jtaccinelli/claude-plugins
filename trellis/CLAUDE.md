@@ -18,6 +18,7 @@ Bundled with the plugin, always available regardless of project:
 | `trellis/skills/populating-overlay/` | One-shot backfill of item leaves for code that already exists in the project |
 | `trellis/skills/scoping-requests/` | Classify a request, run the contract handshake, get human sign-off on a build plan |
 | `trellis/skills/building-items/` | Execute a ratified plan — worktree-per-attempt, fidelity review, wrap + PR |
+| `trellis/skills/visualizing-consumption/` | Publish an on-demand graph of item consume/consumed-by relationships (read-only, no agent dispatch) |
 
 ### Project-level (`.claude/trellis/`)
 
@@ -64,6 +65,10 @@ Bundled with the plugin, always available regardless of project:
 
 4. Run `/trellis:building-items <request-slug>` — node agents build each item in dependency-ordered waves, one worktree per attempt, with the coordinator reviewing contract fidelity after every attempt. Wraps automatically on completion: summary written, PR opened.
 
+### Visualizing (any time, not part of the sequence)
+
+Run `/trellis:visualizing-consumption` whenever you want to see the current consume/consumed-by graph — it doesn't gate or feed into any other step, and can run as often as useful once items exist. Purely a read of existing `CONTRACT.md`/`REFERENCES.md` documentation, rendered as a published artifact; nothing is written back to the overlay.
+
 ---
 
 ## Agents
@@ -93,6 +98,7 @@ Each agent's `.md` file carries a Trigger/Action table; the full Trigger / Input
 | `/trellis:populating-overlay` | One-shot backfill of item leaves for pre-existing code — only runs on a fully empty overlay |
 | `/trellis:scoping-requests` | Classify a request, run the contract handshake, get human sign-off |
 | `/trellis:building-items` | Execute a ratified plan — worktree-per-attempt build loop, wrap + PR |
+| `/trellis:visualizing-consumption` | On-demand, read-only graph of item consume/consumed-by relationships |
 
 ---
 
