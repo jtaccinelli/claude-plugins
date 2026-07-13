@@ -15,6 +15,7 @@ Bundled with the plugin, always available regardless of project:
 | `trellis/agents/coordinator.md` | The router — classifies requests, routes contracts, sequences builds, reviews fidelity |
 | `trellis/agents/cell-agent.md` | The governor — one persistent agent type, instantiated per cell via `--cell` |
 | `trellis/skills/initializing-overlay/` | Scaffold `.claude/trellis/` for a project (one-time, idempotent) |
+| `trellis/skills/populating-overlay/` | Backfill item leaves for code that already exists in the project (one-time or occasional catch-up) |
 | `trellis/skills/scoping-requests/` | Classify a request, run the contract handshake, get human sign-off on a build plan |
 | `trellis/skills/building-items/` | Execute a ratified plan — worktree-per-attempt, fidelity review, wrap + PR |
 
@@ -50,13 +51,17 @@ Bundled with the plugin, always available regardless of project:
 
 1. Run `/trellis:initializing-overlay` once per project — scaffolds `.claude/trellis/` (manifest, config, all 18 cells). Idempotent; safe to re-run to check status.
 
+### Population (existing projects only)
+
+2. Run `/trellis:populating-overlay` — a one-shot bootstrap that backfills item leaves for code that already exists, so the overlay reflects reality before the first real request is scoped. Only runs while every cell's `INVENTORY.md` is still empty; refuses to run again once anything has been captured, whether by this skill or by real work through `building-items`.
+
 ### Scoping
 
-2. Run `/trellis:scoping-requests <description>` — the coordinator classifies the request into entry cell(s), the consumer-authors-the-contract chain runs across every cell the work touches, and a consolidated build plan is presented for human sign-off before anything is written.
+3. Run `/trellis:scoping-requests <description>` — the coordinator classifies the request into entry cell(s), the consumer-authors-the-contract chain runs across every cell the work touches, and a consolidated build plan is presented for human sign-off before anything is written.
 
 ### Building
 
-3. Run `/trellis:building-items <request-slug>` — cell agents build each item in dependency-ordered waves, one worktree per attempt, with the coordinator reviewing contract fidelity after every attempt. Wraps automatically on completion: summary written, PR opened.
+4. Run `/trellis:building-items <request-slug>` — cell agents build each item in dependency-ordered waves, one worktree per attempt, with the coordinator reviewing contract fidelity after every attempt. Wraps automatically on completion: summary written, PR opened.
 
 ---
 
@@ -73,7 +78,7 @@ Classifying · Routing Contracts · Reconciling Verdicts · Merging Duplicates �
 
 ### `cell-agent` actions
 
-Assessing Contracts · Creating Items · Executing Build Attempts · Self-Documenting · Consolidating
+Assessing Contracts · Creating Items · Executing Build Attempts · Self-Documenting · Consolidating · Backfilling Items
 
 Each agent's `.md` file carries a Trigger/Action table; the full Trigger / Inputs / Procedure / Output for each action lives in its own file under `trellis/agents/<agent>/actions/`.
 
@@ -84,6 +89,7 @@ Each agent's `.md` file carries a Trigger/Action table; the full Trigger / Input
 | Skill | Purpose |
 |---|---|
 | `/trellis:initializing-overlay` | Scaffold `.claude/trellis/` — manifest, config, all 18 cells |
+| `/trellis:populating-overlay` | One-shot backfill of item leaves for pre-existing code — only runs on a fully empty overlay |
 | `/trellis:scoping-requests` | Classify a request, run the contract handshake, get human sign-off |
 | `/trellis:building-items` | Execute a ratified plan — worktree-per-attempt build loop, wrap + PR |
 

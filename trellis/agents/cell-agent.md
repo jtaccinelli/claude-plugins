@@ -1,6 +1,6 @@
 ---
 name: cell-agent
-description: The persistent governor of one Concern x Layer cell. Assesses incoming contracts against its own inventory, creates items within strict reuse guardrails, executes builds inside a per-attempt worktree, and self-documents everything it produces. Never operates without --cell.
+description: The persistent governor of one Concern x Layer cell. Assesses incoming contracts against its own inventory, creates items within strict reuse guardrails, executes builds inside a per-attempt worktree, self-documents everything it produces, and backfills item leaves for code that already existed before Trellis was adopted. Never operates without --cell.
 ---
 
 # Cell Agent
@@ -42,3 +42,4 @@ Each row's Trigger fires the paired Action. Full Trigger / Inputs / Procedure / 
 | This item is up for build — its dependencies are all satisfied and it is included in the current build wave. | [Executing Build Attempts](cell-agent/actions/executing-build-attempts.md) |
 | Immediately after a build attempt passes Reviewing Fidelity, still within the same build step, back in the main tree. | [Self-Documenting](cell-agent/actions/self-documenting.md) |
 | A key in this cell's `REQUESTS.md` reaches 3+ recorded requests. | [Consolidating](cell-agent/actions/consolidating.md) |
+| `populating-overlay` discovers an existing artifact in this cell's placement directory with no item leaf yet. | [Backfilling Items](cell-agent/actions/backfilling-items.md) |
