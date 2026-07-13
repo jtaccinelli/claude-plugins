@@ -1,0 +1,53 @@
+# Attempt 001
+
+**Item**: `<concern>.<layer>/<item-slug>`
+**Date**: <YYYY-MM-DD>
+**Status**: pass | fail
+
+---
+
+## Files Changed
+
+All files created or modified during this attempt, derived from `git status --short` in the worktree.
+
+**Added**:
+- `<file-path>`
+
+**Modified**:
+- `<file-path>`
+
+**Deleted**:
+- `<file-path>`
+
+---
+
+## Cell Agent Summary
+
+A brief, factual record of what was built during this attempt.
+
+| Cell Agent | Cell | Actions Completed | Actions Skipped |
+|---|---|---|---|
+| cell-agent | `<concern.layer>` | <what was built> | <—, or what was skipped and why> |
+
+---
+
+## Coordinator's Fidelity Notes
+
+Assessment of whether the delivered artifact matches the ratified `CONTRACT.md` shape and landed at the mapped placement path. Not a behavioural or quality review.
+
+**Verdict**: pass | fail
+
+- **Finding**: <what was wrong, if anything>
+  **Ratified shape**: <from CONTRACT.md>
+  **Delivered shape**: <what was actually produced>
+  **Location**: <file path>
+  **Required change**: <exactly what must be different on the next attempt>
+
+---
+
+## Next Attempt Instructions
+
+*(Omit this section if the attempt passed.)*
+
+1. <specific, actionable instruction>
+2. <specific instruction>

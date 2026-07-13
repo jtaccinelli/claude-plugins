@@ -15,6 +15,11 @@
       "name": "dispatch",
       "source": "./dispatch",
       "description": "Agentic coordination framework with a strong focus on behavioural harnesses"
+    },
+    {
+      "name": "trellis",
+      "source": "./trellis",
+      "description": "Layered coordination framework classifying artifacts by Concern x Layer, with a consumer-authored contract handshake and worktree-per-attempt builds"
     }
   ]
 }
