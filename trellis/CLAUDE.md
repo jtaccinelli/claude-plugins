@@ -27,7 +27,7 @@ Bundled with the plugin, always available regardless of project:
 | `.claude/trellis/<concern>/<NN-layer>/` | One of 18 cells — `AGENT.md`, `INVENTORY.md` (generated), `REQUESTS.md` |
 | `.claude/trellis/<concern>/<NN-layer>/<item>/` | An item leaf — `CONTRACT.md`, `USAGE.md`, `CHANGELOG.md`, `REFERENCES.md` (generated), `attempts/` |
 | `.claude/trellis/<concern>/globals/` | The Globals cell for that concern — same file shape as a layer cell |
-| `.claude/trellis/requests/<slug>/` | One classified request's session record — `plan.md`, `summary.md` |
+| `.claude/trellis/requests/<slug>/` | One classified request's session record — `PLAN.md`, `SUMMARY.md` |
 
 ---
 
@@ -92,6 +92,6 @@ Each agent's `.md` file carries a Trigger/Action table; the full Trigger / Input
 
 - Cells: `.claude/trellis/<presentation\|logic\|data>/<01-element\|02-component\|03-module\|04-feature\|05-page\|globals>/`
 - Items: `.claude/trellis/<cell>/<item-slug>/` — kebab-case
-- Item attempts: `.claude/trellis/<cell>/<item-slug>/attempts/attempt-NNN.md`
+- Item attempts: `.claude/trellis/<cell>/<item-slug>/attempts/ATTEMPT_NNN.md`
 - Requests: `.claude/trellis/requests/<request-slug>/`
 - Placement map (real code location): `trellis.config.json`'s `placement["<concern>.<layer>"]`, with `{item}` substituted for the item slug

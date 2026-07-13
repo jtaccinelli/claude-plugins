@@ -16,7 +16,7 @@ Requires `.claude/trellis/MANIFEST.md` to exist — run `/trellis:initializing-o
 
 1. Confirm `.claude/trellis/MANIFEST.md` exists. If not, stop and tell the user to run `/trellis:initializing-overlay` first.
 2. Establish the request from `$ARGUMENTS`. If vague or underspecified, interview the user until it's concrete enough to classify — a request must describe an observable capability or fix, not an implementation.
-3. Derive a request slug (kebab-case, short) and check whether `.claude/trellis/requests/<slug>/plan.md` already exists.
+3. Derive a request slug (kebab-case, short) and check whether `.claude/trellis/requests/<slug>/PLAN.md` already exists.
    - If it exists and its status is `approved`: report that this request is already scoped and point to `building-items`. Stop.
    - If it exists and its status is `draft`: this is a resume — read it in full and continue from where it left off.
    - If it does not exist: this is a fresh scope.
@@ -48,7 +48,7 @@ As **coordinator**, run [Merging Duplicates](../../agents/coordinator/actions/me
 
 ### Step 4 — Assemble the plan
 
-Write `.claude/trellis/requests/<slug>/plan.md` from `${CLAUDE_SKILL_DIR}/templates/plan.md`:
+Write `.claude/trellis/requests/<slug>/PLAN.md` from `${CLAUDE_SKILL_DIR}/templates/PLAN.md`:
 
 - The request, verbatim.
 - Every entry cell.
@@ -65,13 +65,13 @@ Use `EnterPlanMode` if not already in a planning context, present the assembled 
 
 ### Step 6 — Confirm
 
-On approval, set `plan.md`'s status to `approved`. Report that `/trellis:building-items <slug>` is ready to run. On rejection with feedback, revise the plan (re-running Steps 1–4 as needed for what changed) and return to Step 5.
+On approval, set `PLAN.md`'s status to `approved`. Report that `/trellis:building-items <slug>` is ready to run. On rejection with feedback, revise the plan (re-running Steps 1–4 as needed for what changed) and return to Step 5.
 
 ---
 
 ## Output
 
-- `.claude/trellis/requests/<slug>/plan.md` — status `draft` while scoping, `approved` once signed off
+- `.claude/trellis/requests/<slug>/PLAN.md` — status `draft` while scoping, `approved` once signed off
 - New item leaves may be scaffolded (via cell-agent's Creating Items action) for Unmet contracts that passed the reuse guardrails — `CONTRACT.md`/`USAGE.md` stubs only, status `proposed`; no code is written yet
 - Updated `REQUESTS.md` rows in any cell where a need didn't clear the creation guardrails
 

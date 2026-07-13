@@ -6,19 +6,19 @@ argument-hint: "<request-slug>"
 
 # Building Items
 
-Run an approved plan to completion. For each build wave, every ready item is built by its owning cell-agent inside its own worktree, reviewed by the coordinator for contract fidelity, retried on failure up to a cap, and self-documented on pass. When every item across every wave has landed (or is blocked), the coordinator wraps the request inline: `summary.md` written, PR opened — without returning control to the user between waves.
+Run an approved plan to completion. For each build wave, every ready item is built by its owning cell-agent inside its own worktree, reviewed by the coordinator for contract fidelity, retried on failure up to a cap, and self-documented on pass. When every item across every wave has landed (or is blocked), the coordinator wraps the request inline: `SUMMARY.md` written, PR opened — without returning control to the user between waves.
 
 ---
 
 ## Pre-work
 
-1. Resolve the request from `$ARGUMENTS` — find `.claude/trellis/requests/<slug>/plan.md`. If not found, stop and report that the request has not been scoped; run `/trellis:scoping-requests` first.
-2. Read `plan.md` in full — entry cells, contract graph, Met/Modify/Create breakdown, proposed build waves.
-3. Confirm `plan.md`'s status is `approved`. If not, stop and report the plan still needs sign-off via `scoping-requests`.
-4. As **coordinator**, run [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) on the plan's full contract graph — this is the authoritative build order, superseding `plan.md`'s first-pass proposal.
+1. Resolve the request from `$ARGUMENTS` — find `.claude/trellis/requests/<slug>/PLAN.md`. If not found, stop and report that the request has not been scoped; run `/trellis:scoping-requests` first.
+2. Read `PLAN.md` in full — entry cells, contract graph, Met/Modify/Create breakdown, proposed build waves.
+3. Confirm `PLAN.md`'s status is `approved`. If not, stop and report the plan still needs sign-off via `scoping-requests`.
+4. As **coordinator**, run [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) on the plan's full contract graph — this is the authoritative build order, superseding `PLAN.md`'s first-pass proposal.
 5. **Assess resume state**: for every item slated to build, check its `CONTRACT.md` status.
    - `satisfied` — already built in a prior run of this skill; skip it.
-   - `create` / `proposed` with existing `attempts/attempt-*.md` — this is a **resume**; the next attempt continues from the count of existing attempt files. Surface a brief status note: "Resuming `<item>` from attempt `<N>`."
+   - `create` / `proposed` with existing `attempts/ATTEMPT_*.md` — this is a **resume**; the next attempt continues from the count of existing attempt files. Surface a brief status note: "Resuming `<item>` from attempt `<N>`."
    - `create` / `proposed` with no attempt files — fresh start for this item.
 6. **Create the request branch** if it does not already exist: `git branch --list request/<slug>`; if absent, `git branch request/<slug>` from current HEAD. This branch is never auto-merged to main — it is the PR branch, exactly like Slated's scene branch.
 
@@ -44,7 +44,7 @@ Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, inst
 - The item's ratified `CONTRACT.md` output shape.
 - The absolute worktree path as its working directory — all file writes for code must occur within this path, resolved against `trellis.config.json`'s placement map.
 - An explicit constraint: never write `.claude/trellis/` framework artefacts (`CONTRACT.md`, `USAGE.md`, `CHANGELOG.md`, attempt files) from inside the worktree — those are written to the main tree only, in Step 5/6 below.
-- If resuming, the path to the most recent `attempts/attempt-<NNN>.md` in the main tree — instruct it to read the Coordinator's Fidelity Notes and Next Attempt Instructions in full and apply every required change.
+- If resuming, the path to the most recent `attempts/ATTEMPT_<NNN>.md` in the main tree — instruct it to read the Coordinator's Fidelity Notes and Next Attempt Instructions in full and apply every required change.
 
 Wait for the cell agent to complete.
 
@@ -58,7 +58,7 @@ As **coordinator**, run [Reviewing Fidelity](../../agents/coordinator/actions/re
 
 ### Step 5 — Write the attempt file
 
-Write `.claude/trellis/<concern>/<NN-layer>/<item-slug>/attempts/attempt-<NNN>.md` in the **main tree**, from `${CLAUDE_SKILL_DIR}/templates/attempt-001.md`:
+Write `.claude/trellis/<concern>/<NN-layer>/<item-slug>/attempts/ATTEMPT_<NNN>.md` in the **main tree**, from `${CLAUDE_SKILL_DIR}/templates/ATTEMPT_001.md`:
 
 - **Files Changed** — the Step 3 list.
 - **Cell Agent Summary** — factual account of what was built.
@@ -89,25 +89,25 @@ Executed inline once every item across every wave has either landed or been mark
 Gather from every item's attempt files and final status:
 - Which items built successfully, and in how many attempts each.
 - Which items are BLOCKED, and the persisting fidelity gap from their final attempt.
-- Any escalations that occurred during scoping (from `plan.md`).
+- Any escalations that occurred during scoping (from `PLAN.md`).
 
-### Wrap Step 2 — Write summary.md
+### Wrap Step 2 — Write SUMMARY.md
 
-Write `.claude/trellis/requests/<slug>/summary.md` from `${CLAUDE_SKILL_DIR}/templates/summary.md`:
+Write `.claude/trellis/requests/<slug>/SUMMARY.md` from `${CLAUDE_SKILL_DIR}/templates/SUMMARY.md`:
 - **Description** — 2–4 plain-language sentences: what capability was added, grouped by cell.
 - **Items** — every item built, grouped by cell, with a one-line description each (draw from each item's `USAGE.md`).
 - **Blocked** — any BLOCKED items and why; omit if none.
 
-Update `plan.md`'s status to `complete` if every item landed, or leave it `approved` with a note if any items are BLOCKED.
+Update `PLAN.md`'s status to `complete` if every item landed, or leave it `approved` with a note if any items are BLOCKED.
 
 ### Wrap Step 3 — Open a pull request
 
 1. Push: `git push -u origin request/<slug>`.
 2. Create the PR: `gh pr create --title "request(<slug>): complete" --body "$(cat <<'EOF'
-<Description section from summary.md, verbatim>
+<Description section from SUMMARY.md, verbatim>
 
 ## Items
-<Items section from summary.md, verbatim>
+<Items section from SUMMARY.md, verbatim>
 EOF
 )"`.
 
@@ -118,7 +118,7 @@ If `gh` is unavailable or push/PR creation fails, surface fallback instructions 
 ```
 Request <slug> — <COMPLETE | PARTIAL>
 
-<N> item(s) built. summary.md written.
+<N> item(s) built. SUMMARY.md written.
 PR: <url>
 ```
 
@@ -128,15 +128,15 @@ If any items are BLOCKED, list them and use `AskUserQuestion` to pause: "Some it
 
 ## Output
 
-- `.claude/trellis/<cell>/<item>/attempts/attempt-<NNN>.md` — attempt file per attempt executed
+- `.claude/trellis/<cell>/<item>/attempts/ATTEMPT_<NNN>.md` — attempt file per attempt executed
 - `.claude/trellis/<cell>/<item>/{CONTRACT,USAGE,CHANGELOG,REFERENCES}.md` — updated on pass
 - `.claude/trellis/<cell>/INVENTORY.md` — regenerated on pass
-- `.claude/trellis/requests/<slug>/summary.md` — written on wrap
+- `.claude/trellis/requests/<slug>/SUMMARY.md` — written on wrap
 - PR opened from `request/<slug>` into `main` (or fallback instructions surfaced)
 
 ## Rules
 
-- Never run a request whose `plan.md` status is not `approved`.
+- Never run a request whose `PLAN.md` status is not `approved`.
 - Never dispatch a cell-agent without `--cell`.
 - Never skip Reviewing Fidelity — an attempt is never marked passed without it.
 - Never infer the changed file list from cell-agent output — always derive from `git status --short` in the worktree.

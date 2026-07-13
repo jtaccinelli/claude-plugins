@@ -11,4 +11,4 @@ description: Check a build attempt's delivered artifact against its ratified con
 
 **Procedure**: verify two things only — the code was written to the path resolved from `trellis.config.json`'s placement map for that item's cell, and the delivered shape matches what the `CONTRACT.md` says was ratified. This is not a quality or behavioural review. Record specific findings when it fails: what shape was expected, what was delivered, and where.
 
-**Output**: pass/fail verdict plus notes, written into the item's `attempts/attempt-<NNN>.md`.
+**Output**: pass/fail verdict plus notes, written into the item's `attempts/ATTEMPT_<NNN>.md`.
