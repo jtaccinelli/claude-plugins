@@ -35,7 +35,7 @@ Exclude, same as Slated's `scout`:
 
 A file with no matching `coreFiles` entry, or sitting outside every node's placement directory entirely, is out of scope for this skill — not every file in a repo needs to become a Trellis item, only the ones the placement map claims.
 
-This step may run in parallel across all 18 nodes — discovery within one node has no dependency on any other.
+Dispatch discovery across all 18 nodes as a team, at once — one pass per node, none waiting on another — since discovery within one node has no dependency on any other.
 
 ### Step 2 — Classify each candidate
 
@@ -43,10 +43,10 @@ For each candidate artifact, read it and, as **coordinator**, run [Classifying](
 
 ### Step 3 — Backfill or flag
 
-- If the classification **matches** the node whose directory the artifact was found in: dispatch that node's **node-agent** (`--node <concern.layer>`) to run [Backfilling Items](../../agents/node-agent/actions/backfilling-items.md) for it.
+- If the classification **matches** the node whose directory the artifact was found in: dispatch that node's **node-agent** (`--node <concern.layer>`) with the work order to run [Backfilling Items](../../agents/node-agent/actions/backfilling-items.md) for it, and wait for its report — the scaffolded item leaf(s), plus any findings.
 - If the classification **disagrees** with the directory it was found in: do not backfill it into either node. Record it as a finding — this is existing organisational debt the scan surfaced, not something Trellis silently resolves by picking a side.
 
-Node agents backfill in parallel across nodes; within a node, items backfill sequentially since they all write to the same `INVENTORY.md` and potentially the same `AGENT.md` Learned Patterns log.
+Dispatch every node's backfill pass at once, as a team — node agents work in parallel across nodes; within a single node, items backfill sequentially since they all write to the same `INVENTORY.md` and potentially the same `AGENT.md` Learned Patterns log. Collect every node's report before Step 4.
 
 ### Step 4 — Human review gate
 

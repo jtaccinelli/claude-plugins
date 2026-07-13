@@ -26,7 +26,7 @@ Run an approved plan to completion. For each build wave, every ready item is bui
 
 ## Build Loop
 
-Process waves in the order [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) returned. Within a wave, every item builds independently — a wave is constructed so that no item in it still has an unmet dependency, but two items in the same wave may still write to different files, so check explicitly before parallelizing: an item may build in parallel with another only if neither's placement path overlaps the other's AND neither's `CONTRACT.md` lists the other as a dependency. Otherwise, serialize them within the wave.
+Process waves in the order [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) returned. A wave exists precisely so its items can be dispatched to the whole team at once, not worked one at a time — every item in it builds independently, since a wave is constructed so that no item in it still has an unmet dependency. Two items in the same wave may still write to different files, so check explicitly before parallelizing: an item may build in parallel with another only if neither's placement path overlaps the other's AND neither's `CONTRACT.md` lists the other as a dependency. Otherwise, serialize them within the wave. Dispatch every clear-to-parallelize item's attempt loop at once and collect every report before moving to the next wave.
 
 For each item, run the following attempt loop (maximum **5 attempts** per item, counted across all runs of this skill on this item):
 
@@ -39,14 +39,14 @@ For each item, run the following attempt loop (maximum **5 attempts** per item, 
 
 ### Step 2 — Dispatch the node agent
 
-Spawn a sub-agent using the **node-agent** agent, `--node <concern.layer>`, instructing it to run [Executing Build Attempts](../../agents/node-agent/actions/executing-build-attempts.md):
+Dispatch a sub-agent using the **node-agent** agent, `--node <concern.layer>`, with this work order — run [Executing Build Attempts](../../agents/node-agent/actions/executing-build-attempts.md):
 
 - The item's ratified `CONTRACT.md` output shape.
 - The absolute worktree path as its working directory — all file writes for code must occur within this path, resolved against `trellis.config.json`'s placement map.
 - An explicit constraint: never write `.claude/trellis/` framework artefacts (`CONTRACT.md`, `USAGE.md`, `CHANGELOG.md`, attempt files) from inside the worktree — those are written to the main tree only, in Step 5/6 below.
 - If resuming, the path to the most recent `attempts/ATTEMPT_<NNN>.md` in the main tree — instruct it to read the Coordinator's Fidelity Notes and Next Attempt Instructions in full and apply every required change.
 
-Wait for the node agent to complete.
+Wait for the node agent's report — code delivered to the mapped host location, ready for review. Every item dispatched this wave reports back independently; one item's dispatch is never blocked on another's report except where Step 1's parallelism check said to serialize them.
 
 ### Step 3 — Capture changed files
 
@@ -67,7 +67,7 @@ Write `.claude/trellis/<concern>/<NN-layer>/<item-slug>/attempts/ATTEMPT_<NNN>.m
 
 ### Step 6 — On pass: self-document and merge
 
-1. Spawn a sub-agent using the **node-agent** agent, `--node <concern.layer>`, to run [Self-Documenting](../../agents/node-agent/actions/self-documenting.md) in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the node's `INVENTORY.md`, and log or reconcile any pattern finding into the node's `AGENT.md` Learned Patterns. Set `CONTRACT.md` status to `satisfied`.
+1. Dispatch a sub-agent using the **node-agent** agent, `--node <concern.layer>`, with the work order to run [Self-Documenting](../../agents/node-agent/actions/self-documenting.md) in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the node's `INVENTORY.md`, and log or reconcile any pattern finding into the node's `AGENT.md` Learned Patterns. Wait for its report — the updated item leaf, and a pattern conflict escalation if one was raised — then set `CONTRACT.md` status to `satisfied`.
 2. Merge into the request branch: `git checkout request/<slug> && git merge attempt/<slug>-<node>-<item-slug>-<NNN> --no-ff -m "item(<node>/<item-slug>): merge attempt-<NNN>"`. Return to the original branch: `git checkout -`.
 3. Remove the worktree: `git worktree remove .worktrees/attempt-<slug>-<node>-<item-slug>-<NNN>`. Delete the attempt branch: `git branch -d attempt/<slug>-<node>-<item-slug>-<NNN>`.
 4. Mark this item complete; if any other item was waiting on this one as a dependency and now has all dependencies satisfied, it becomes eligible for the current or next wave.

@@ -17,4 +17,4 @@ description: Check a routed contract against this node's inventory and return a 
 - **Unmet** — nothing in this node addresses it.
 - **Counter** — the requested shape doesn't match how this node actually works. Propose the shape you would actually produce and return it for the consumer to ratify.
 
-**Output**: one verdict plus rationale, returned to the coordinator.
+**Report** (returned to the coordinator): one verdict plus rationale.

@@ -11,4 +11,4 @@ description: Extract a dedicated item once a request key is historically demande
 
 **Procedure**: extract a dedicated item for the key (via [Creating Items](creating-items.md), which will now pass the "historically demanded" guardrail), then migrate every consumer listed as depending on the ad hoc implementations to consume the new item instead. This is a scheduled refactor, not a build-blocker — it can run in its own build wave.
 
-**Output**: a new item plus updated imports at every migrated consumer; the `REQUESTS.md` row marked `EXTRACTED <date>`.
+**Report** (returned to the dispatcher): a new item plus updated imports at every migrated consumer; the `REQUESTS.md` row marked `EXTRACTED <date>`.

@@ -31,16 +31,21 @@ As **coordinator**, run [Classifying](../../agents/coordinator/actions/classifyi
 
 ### Step 2 — Interrogate outward from each entry node
 
-For each entry node, spawn a sub-agent using the **node-agent** agent with `--node <concern.layer>`, instructing it to determine what the request needs from *this* node and, for anything this node cannot itself provide, author a contract for what it needs from another node (per its Assessing Contracts / Creating Items actions and the request description).
+Treat every entry node as a team member with a standing work order, not a queue to work through one at a time. Dispatch one sub-agent per entry node **at once**, using the **node-agent** agent (`--node <concern.layer>`):
 
-For each authored contract:
+- **Work order**: determine what the request needs from *this* node; for anything this node cannot itself provide, author a contract for what it needs from another node (per its Assessing Contracts / Creating Items actions and the request description).
+- **Report expected back**: this node's own needs, plus any contracts it authored for cross-node needs.
 
-1. As **coordinator**, run [Routing Contracts](../../agents/coordinator/actions/routing-contracts.md) — classify the target node if not already named, and hand the contract to that node's node-agent.
-2. That node-agent runs [Assessing Contracts](../../agents/node-agent/actions/assessing-contracts.md), returning Met / Partial · additive / Partial · breaking / Unmet / Countered.
-3. As **coordinator**, run [Reconciling Verdicts](../../agents/coordinator/actions/reconciling-verdicts.md). On an unresolved Countered conflict (consumer rejects the provider's counter and neither will yield), use `AskUserQuestion` to escalate — do not proceed past this contract until the user resolves it.
-4. If the verdict is Unmet, and that provider node in turn needs something from a further node to satisfy it, that provider becomes a consumer and authors the next contract — recurse into Step 2 for it.
+Wait for every dispatched report before proceeding — entry nodes with no dependency on each other are dispatched and interrogated in parallel, never serialized just for convenience.
 
-The chain follows real dependency edges and bottoms out at Elements and Globals. Two providers with no dependency on each other interrogate in parallel; serialize only along a genuine edge (e.g. Presentation → Logic → Data when a value actually flows through Logic).
+For each authored contract, the same dispatch-and-report cycle runs up the chain:
+
+1. As **coordinator**, run [Routing Contracts](../../agents/coordinator/actions/routing-contracts.md) — classify the target node if not already named, and dispatch the contract to that node's node-agent as its work order.
+2. That node-agent reports back via [Assessing Contracts](../../agents/node-agent/actions/assessing-contracts.md): Met / Partial · additive / Partial · breaking / Unmet / Countered.
+3. As **coordinator**, run [Reconciling Verdicts](../../agents/coordinator/actions/reconciling-verdicts.md) against the returned report. On an unresolved Countered conflict (consumer rejects the provider's counter and neither will yield), use `AskUserQuestion` to escalate — do not proceed past this contract until the user resolves it.
+4. If the verdict is Unmet, and that provider node in turn needs something from a further node to satisfy it, that provider becomes a consumer and authors the next contract — recurse into Step 2 for it, dispatched the same way.
+
+The chain follows real dependency edges and bottoms out at Elements and Globals. Two providers with no dependency on each other are dispatched and interrogated in parallel, as separate team members working simultaneously; serialize only along a genuine edge (e.g. Presentation → Logic → Data when a value actually flows through Logic).
 
 ### Step 3 — Merge duplicates and convergence
 
