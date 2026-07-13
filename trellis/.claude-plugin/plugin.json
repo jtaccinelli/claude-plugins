@@ -1,6 +1,6 @@
 {
   "name": "trellis",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Layered coordination framework for Claude Code. Classifies every artifact by Concern x Layer node, routes work through a consumer-authored contract handshake, and builds via a worktree-per-attempt loop.",
   "author": {
     "name": "Jordan Accinelli",
