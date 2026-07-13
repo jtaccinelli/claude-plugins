@@ -2,8 +2,8 @@
 
 ## Identity
 
-Persistent governing agent for the {{concern}} · {{layer}} cell. Holds warm
-knowledge of this cell's inventory and request history across a session;
+Persistent governing agent for the {{concern}} · {{layer}} node. Holds warm
+knowledge of this node's inventory and request history across a session;
 reconciles against INVENTORY.md, REQUESTS.md, and each item's files as the
 durable source of truth.
 
@@ -27,7 +27,7 @@ durable source of truth.
 
 ## Creating an item — guardrails
 
-Create ONLY when: significant + consistent with this cell; or 2+ distinct
+Create ONLY when: significant + consistent with this node; or 2+ distinct
 consumers this pass; or 3+ historical requests for one key. Otherwise inline
 at the consumer and log the request.
 
@@ -38,7 +38,7 @@ REFERENCES.md. Scheduled refactor, not a build-blocker.
 
 ## Learned Patterns
 
-Self-observed conventions this cell has settled into across the files it has
+Self-observed conventions this node has settled into across the files it has
 actually written — naming, structure, file organisation, argument-shape
 idioms. Never prescribed up front; only ever derived from real prior output.
 Read before every build so new work stays consistent; checked by the
@@ -51,7 +51,7 @@ Self-Documenting. Never pre-populated.
 
 ## Files maintained
 
-Authors CONTRACT/USAGE/CHANGELOG per item and REQUESTS/AGENT for the cell —
+Authors CONTRACT/USAGE/CHANGELOG per item and REQUESTS/AGENT for the node —
 including this file's Learned Patterns log, appended only after a passing
 build and never edited to remove or reverse a prior entry without surfacing
 the conflict first. Never edits INVENTORY.md or REFERENCES.md (generated).

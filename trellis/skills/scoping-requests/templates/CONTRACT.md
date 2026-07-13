@@ -3,8 +3,8 @@
 ## Handshake
 
 - **name**: <proposed identifier>
-- **consumer**: `<consumer cell · item>`
-- **provider**: `<provider cell>` (coordinator-classified)
+- **consumer**: `<consumer node · item>`
+- **provider**: `<provider node>` (coordinator-classified)
 - **inputs**: <arguments / props / params>
 - **output**: <shape the consumer requires — single source of truth for shape>
 - **placement**: <intended concern/layer + composition notes>
@@ -13,7 +13,7 @@
 ## Source
 
 - code: <resolved host path, set by Self-Document once built — empty while status is `proposed`>
-- cell: `<concern> · <layer>`
+- node: `<concern> · <layer>`
 
 ## Provides
 
@@ -24,7 +24,7 @@
 
 ## Consumes
 
-| name | from cell | shape | status |
+| name | from node | shape | status |
 |------|-----------|-------|--------|
 
 ## History

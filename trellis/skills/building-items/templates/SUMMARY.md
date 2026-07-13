@@ -1,6 +1,6 @@
 # Summary: <Request Slug>
 
-> This file is the completion summary for this request. It describes what was built, which cells and items were touched, and what future requests should know about the work — used for quick context by anyone scoping a related request later.
+> This file is the completion summary for this request. It describes what was built, which nodes and items were touched, and what future requests should know about the work — used for quick context by anyone scoping a related request later.
 
 ---
 
@@ -12,7 +12,7 @@
 
 ## Items
 
-A complete list of items built or modified by this request, grouped by cell.
+A complete list of items built or modified by this request, grouped by node.
 
 ### `<concern> · <layer>`
 

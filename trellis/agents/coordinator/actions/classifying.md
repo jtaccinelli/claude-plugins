@@ -1,11 +1,11 @@
 ---
 name: classifying
-description: Run the Concern x Layer decision matrix on a new request or a sub-need a cell agent surfaces.
+description: Run the Concern x Layer decision matrix on a new request or a sub-need a node agent surfaces.
 ---
 
 # Classifying
 
-**Trigger**: a new request, or a cell agent surfaces a sub-need that isn't yet classified.
+**Trigger**: a new request, or a node agent surfaces a sub-need that isn't yet classified.
 
 **Inputs**: the request or need, stated in plain language.
 

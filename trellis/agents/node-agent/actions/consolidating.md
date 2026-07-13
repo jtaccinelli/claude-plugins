@@ -5,7 +5,7 @@ description: Extract a dedicated item once a request key is historically demande
 
 # Consolidating
 
-**Trigger**: a key in this cell's `REQUESTS.md` reaches 3+ recorded requests.
+**Trigger**: a key in this node's `REQUESTS.md` reaches 3+ recorded requests.
 
 **Inputs**: the request key, the `REFERENCES.md` of whichever item(s) are currently serving that need ad hoc (inlined at each consumer).
 

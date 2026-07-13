@@ -10,12 +10,12 @@
 
 ## Structure
 
-Concern → Layer → Cell → Item. Item leaves hold CONTRACT/USAGE/CHANGELOG +
+Concern → Layer → Node → Item. Item leaves hold CONTRACT/USAGE/CHANGELOG +
 pointer; INVENTORY/REFERENCES are generated.
 
 ## Placement
 
-Cell → real path is declared in trellis.config.json (single source of truth).
+Node → real path is declared in trellis.config.json (single source of truth).
 
 ## Authoring
 

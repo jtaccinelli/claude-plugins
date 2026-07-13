@@ -11,7 +11,7 @@
 
 ---
 
-## Entry Cells
+## Entry Nodes
 
 - `<concern> · <layer>` — <why this is an entry point>
 
@@ -21,20 +21,20 @@
 
 | Contract | Consumer | Provider | Verdict | Status |
 |---|---|---|---|---|
-| `<name>` | `<cell · item>` | `<cell>` | Met / Partial · additive / Partial · breaking / Unmet / Countered | satisfied / create / escalated |
+| `<name>` | `<node · item>` | `<node>` | Met / Partial · additive / Partial · breaking / Unmet / Countered | satisfied / create / escalated |
 
 ---
 
 ## Met / Modify / Create Breakdown
 
 **Met** (no build needed):
-- `<cell · item>`
+- `<node · item>`
 
 **Modify** (Partial · additive / Partial · breaking):
-- `<cell · item>` — <what changes, and which verdict>
+- `<node · item>` — <what changes, and which verdict>
 
 **Create** (Unmet, passed the reuse guardrails):
-- `<cell · item>` — <why it passed: significant+consistent / 2+ consumers this pass / 3+ historical requests>
+- `<node · item>` — <why it passed: significant+consistent / 2+ consumers this pass / 3+ historical requests>
 
 ---
 

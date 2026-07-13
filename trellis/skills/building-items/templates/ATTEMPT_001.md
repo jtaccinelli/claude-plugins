@@ -21,19 +21,19 @@ All files created or modified during this attempt, derived from `git status --sh
 
 ---
 
-## Cell Agent Summary
+## Node Agent Summary
 
 A brief, factual record of what was built during this attempt.
 
-| Cell Agent | Cell | Actions Completed | Actions Skipped |
+| Node Agent | Node | Actions Completed | Actions Skipped |
 |---|---|---|---|
-| cell-agent | `<concern.layer>` | <what was built> | <—, or what was skipped and why> |
+| node-agent | `<concern.layer>` | <what was built> | <—, or what was skipped and why> |
 
 ---
 
 ## Coordinator's Fidelity Notes
 
-Assessment of whether the delivered artifact matches the ratified `CONTRACT.md` shape, landed at the mapped placement path, and is consistent with this cell's logged `AGENT.md` patterns. Not an open-ended quality review — every finding cites either the contract or a specific logged pattern.
+Assessment of whether the delivered artifact matches the ratified `CONTRACT.md` shape, landed at the mapped placement path, and is consistent with this node's logged `AGENT.md` patterns. Not an open-ended quality review — every finding cites either the contract or a specific logged pattern.
 
 **Verdict**: pass | fail
 

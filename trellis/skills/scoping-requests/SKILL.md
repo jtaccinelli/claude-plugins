@@ -1,12 +1,12 @@
 ---
 name: scoping-requests
-description: Classify a request into its entry cell(s), run the consumer-authors-the-contract handshake across every cell it touches, and get human sign-off on the resulting build plan before anything is written.
+description: Classify a request into its entry node(s), run the consumer-authors-the-contract handshake across every node it touches, and get human sign-off on the resulting build plan before anything is written.
 argument-hint: "<request description>"
 ---
 
 # Scoping Requests
 
-Turn a plain-language request into a ratified, human-approved build plan. The coordinator classifies the request, the consumer-authors-the-contract chain runs outward from the entry cell(s) until every need bottoms out at an Element or a Global, and the consolidated plan is presented for sign-off before `building-items` touches anything.
+Turn a plain-language request into a ratified, human-approved build plan. The coordinator classifies the request, the consumer-authors-the-contract chain runs outward from the entry node(s) until every need bottoms out at an Element or a Global, and the consolidated plan is presented for sign-off before `building-items` touches anything.
 
 Requires `.claude/trellis/MANIFEST.md` to exist — run `/trellis:initializing-overlay` first if it doesn't.
 
@@ -25,33 +25,33 @@ Requires `.claude/trellis/MANIFEST.md` to exist — run `/trellis:initializing-o
 
 ## Steps
 
-### Step 1 — Classify entry cell(s)
+### Step 1 — Classify entry node(s)
 
-As **coordinator**, run [Classifying](../../agents/coordinator/actions/classifying.md) on the request itself. Requests are not force-fed to a default layer — a page-level feature enters at Page, a recolor enters at Presentation · Element, a webhook enters at Data. A request may be multi-rooted (it needs work starting in more than one cell at once); record every entry cell.
+As **coordinator**, run [Classifying](../../agents/coordinator/actions/classifying.md) on the request itself. Requests are not force-fed to a default layer — a page-level feature enters at Page, a recolor enters at Presentation · Element, a webhook enters at Data. A request may be multi-rooted (it needs work starting in more than one node at once); record every entry node.
 
-### Step 2 — Interrogate outward from each entry cell
+### Step 2 — Interrogate outward from each entry node
 
-For each entry cell, spawn a sub-agent using the **cell-agent** agent with `--cell <concern.layer>`, instructing it to determine what the request needs from *this* cell and, for anything this cell cannot itself provide, author a contract for what it needs from another cell (per its Assessing Contracts / Creating Items actions and the request description).
+For each entry node, spawn a sub-agent using the **node-agent** agent with `--node <concern.layer>`, instructing it to determine what the request needs from *this* node and, for anything this node cannot itself provide, author a contract for what it needs from another node (per its Assessing Contracts / Creating Items actions and the request description).
 
 For each authored contract:
 
-1. As **coordinator**, run [Routing Contracts](../../agents/coordinator/actions/routing-contracts.md) — classify the target cell if not already named, and hand the contract to that cell's cell-agent.
-2. That cell-agent runs [Assessing Contracts](../../agents/cell-agent/actions/assessing-contracts.md), returning Met / Partial · additive / Partial · breaking / Unmet / Countered.
+1. As **coordinator**, run [Routing Contracts](../../agents/coordinator/actions/routing-contracts.md) — classify the target node if not already named, and hand the contract to that node's node-agent.
+2. That node-agent runs [Assessing Contracts](../../agents/node-agent/actions/assessing-contracts.md), returning Met / Partial · additive / Partial · breaking / Unmet / Countered.
 3. As **coordinator**, run [Reconciling Verdicts](../../agents/coordinator/actions/reconciling-verdicts.md). On an unresolved Countered conflict (consumer rejects the provider's counter and neither will yield), use `AskUserQuestion` to escalate — do not proceed past this contract until the user resolves it.
-4. If the verdict is Unmet, and that provider cell in turn needs something from a further cell to satisfy it, that provider becomes a consumer and authors the next contract — recurse into Step 2 for it.
+4. If the verdict is Unmet, and that provider node in turn needs something from a further node to satisfy it, that provider becomes a consumer and authors the next contract — recurse into Step 2 for it.
 
 The chain follows real dependency edges and bottoms out at Elements and Globals. Two providers with no dependency on each other interrogate in parallel; serialize only along a genuine edge (e.g. Presentation → Logic → Data when a value actually flows through Logic).
 
 ### Step 3 — Merge duplicates and convergence
 
-As **coordinator**, run [Merging Duplicates](../../agents/coordinator/actions/merging-duplicates.md) whenever two contract chains reach the same provider item, or two contracts share a canonical key (target cell + ratified output-shape signature). Do this continuously as Step 2 proceeds, not as an afterthought — it keeps the historical-demand counters in every cell's `REQUESTS.md` trustworthy.
+As **coordinator**, run [Merging Duplicates](../../agents/coordinator/actions/merging-duplicates.md) whenever two contract chains reach the same provider item, or two contracts share a canonical key (target node + ratified output-shape signature). Do this continuously as Step 2 proceeds, not as an afterthought — it keeps the historical-demand counters in every node's `REQUESTS.md` trustworthy.
 
 ### Step 4 — Assemble the plan
 
 Write `.claude/trellis/requests/<slug>/PLAN.md` from `${CLAUDE_SKILL_DIR}/templates/PLAN.md`:
 
 - The request, verbatim.
-- Every entry cell.
+- Every entry node.
 - The full contract graph — every contract, its consumer, provider, verdict, and status.
 - A Met / Modify / Create breakdown.
 - Proposed build waves — a first pass at [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) (Globals + Elements first, then anything whose dependencies are satisfied), refined for real once the plan is approved and `building-items` runs.
@@ -61,7 +61,7 @@ Status: `draft`.
 
 ### Step 5 — Human sign-off gate
 
-Use `EnterPlanMode` if not already in a planning context, present the assembled plan (the cell/contract graph, the Met/Modify/Create breakdown, the proposed build waves — as a navigable summary, not a wall of raw file contents), and call `ExitPlanMode` to request approval. Build must not proceed without this.
+Use `EnterPlanMode` if not already in a planning context, present the assembled plan (the node/contract graph, the Met/Modify/Create breakdown, the proposed build waves — as a navigable summary, not a wall of raw file contents), and call `ExitPlanMode` to request approval. Build must not proceed without this.
 
 ### Step 6 — Confirm
 
@@ -72,12 +72,12 @@ On approval, set `PLAN.md`'s status to `approved`. Report that `/trellis:buildin
 ## Output
 
 - `.claude/trellis/requests/<slug>/PLAN.md` — status `draft` while scoping, `approved` once signed off
-- New item leaves may be scaffolded (via cell-agent's Creating Items action) for Unmet contracts that passed the reuse guardrails — `CONTRACT.md`/`USAGE.md` stubs only, status `proposed`; no code is written yet
-- Updated `REQUESTS.md` rows in any cell where a need didn't clear the creation guardrails
+- New item leaves may be scaffolded (via node-agent's Creating Items action) for Unmet contracts that passed the reuse guardrails — `CONTRACT.md`/`USAGE.md` stubs only, status `proposed`; no code is written yet
+- Updated `REQUESTS.md` rows in any node where a need didn't clear the creation guardrails
 
 ## Rules
 
 - Never skip the human sign-off gate — no contract is built on until the plan is approved.
 - Never resolve an unconverged Countered contract without `AskUserQuestion` — that's the coordinator's job, and it never self-resolves a design tie.
-- Never dispatch a cell-agent without `--cell` — every instantiation must declare which cell it governs.
+- Never dispatch a node-agent without `--node` — every instantiation must declare which node it governs.
 - Never treat a request as single-rooted by default — always run [Classifying](../../agents/coordinator/actions/classifying.md) against the request itself first.
