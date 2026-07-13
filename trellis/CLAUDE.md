@@ -66,15 +66,15 @@ Bundled with the plugin, always available regardless of project:
 | `coordinator` | Classification, contract routing, build sequencing, fidelity review | No — one fixed definition |
 | `cell-agent` | Assessing/creating/building items within one cell | No — one fixed definition; context comes from the cell's `AGENT.md`, not a different identity per cell |
 
-### `coordinator` capabilities
+### `coordinator` actions
 
-Classify · Route Contract · Reconcile Verdict · Merge Duplicates · Sequence Build Waves · Fidelity Review
+Classifying · Routing Contracts · Reconciling Verdicts · Merging Duplicates · Sequencing Build Waves · Reviewing Fidelity
 
-### `cell-agent` capabilities
+### `cell-agent` actions
 
-Assess Contract · Create Item · Execute Build Attempt · Self-Document · Consolidate
+Assessing Contracts · Creating Items · Executing Build Attempts · Self-Documenting · Consolidating
 
-See each agent's `.md` file for the full Trigger / Inputs / Procedure / Output of every capability.
+Each agent's `.md` file carries a Trigger/Action table; the full Trigger / Inputs / Procedure / Output for each action lives in its own file under `trellis/agents/<agent>/actions/`.
 
 ---
 

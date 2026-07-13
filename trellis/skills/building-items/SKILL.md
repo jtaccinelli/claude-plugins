@@ -15,7 +15,7 @@ Run an approved plan to completion. For each build wave, every ready item is bui
 1. Resolve the request from `$ARGUMENTS` — find `.claude/trellis/requests/<slug>/plan.md`. If not found, stop and report that the request has not been scoped; run `/trellis:scoping-requests` first.
 2. Read `plan.md` in full — entry cells, contract graph, Met/Modify/Create breakdown, proposed build waves.
 3. Confirm `plan.md`'s status is `approved`. If not, stop and report the plan still needs sign-off via `scoping-requests`.
-4. As **coordinator**, run **Sequence Build Waves** on the plan's full contract graph — this is the authoritative build order, superseding `plan.md`'s first-pass proposal.
+4. As **coordinator**, run [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) on the plan's full contract graph — this is the authoritative build order, superseding `plan.md`'s first-pass proposal.
 5. **Assess resume state**: for every item slated to build, check its `CONTRACT.md` status.
    - `satisfied` — already built in a prior run of this skill; skip it.
    - `create` / `proposed` with existing `attempts/attempt-*.md` — this is a **resume**; the next attempt continues from the count of existing attempt files. Surface a brief status note: "Resuming `<item>` from attempt `<N>`."
@@ -26,7 +26,7 @@ Run an approved plan to completion. For each build wave, every ready item is bui
 
 ## Build Loop
 
-Process waves in the order **Sequence Build Waves** returned. Within a wave, every item builds independently — a wave is constructed so that no item in it still has an unmet dependency, but two items in the same wave may still write to different files, so check explicitly before parallelizing: an item may build in parallel with another only if neither's placement path overlaps the other's AND neither's `CONTRACT.md` lists the other as a dependency. Otherwise, serialize them within the wave.
+Process waves in the order [Sequencing Build Waves](../../agents/coordinator/actions/sequencing-build-waves.md) returned. Within a wave, every item builds independently — a wave is constructed so that no item in it still has an unmet dependency, but two items in the same wave may still write to different files, so check explicitly before parallelizing: an item may build in parallel with another only if neither's placement path overlaps the other's AND neither's `CONTRACT.md` lists the other as a dependency. Otherwise, serialize them within the wave.
 
 For each item, run the following attempt loop (maximum **5 attempts** per item, counted across all runs of this skill on this item):
 
@@ -39,7 +39,7 @@ For each item, run the following attempt loop (maximum **5 attempts** per item, 
 
 ### Step 2 — Dispatch the cell agent
 
-Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, instructing it to run **Execute Build Attempt**:
+Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, instructing it to run [Executing Build Attempts](../../agents/cell-agent/actions/executing-build-attempts.md):
 
 - The item's ratified `CONTRACT.md` output shape.
 - The absolute worktree path as its working directory — all file writes for code must occur within this path, resolved against `trellis.config.json`'s placement map.
@@ -52,9 +52,9 @@ Wait for the cell agent to complete.
 
 Run `git -C <worktree-path> status --short`. Parse into a structured Added/Modified/Deleted list — this is the canonical record; never infer the file list from the cell agent's own report.
 
-### Step 4 — Fidelity Review
+### Step 4 — Reviewing Fidelity
 
-As **coordinator**, run **Fidelity Review**: compare the delivered artifact (from the worktree) against the item's ratified `CONTRACT.md` output shape. Record the verdict and, on failure, the specific gap: what shape was expected, what was delivered, and where.
+As **coordinator**, run [Reviewing Fidelity](../../agents/coordinator/actions/reviewing-fidelity.md): compare the delivered artifact (from the worktree) against the item's ratified `CONTRACT.md` output shape. Record the verdict and, on failure, the specific gap: what shape was expected, what was delivered, and where.
 
 ### Step 5 — Write the attempt file
 
@@ -67,7 +67,7 @@ Write `.claude/trellis/<concern>/<NN-layer>/<item-slug>/attempts/attempt-<NNN>.m
 
 ### Step 6 — On pass: self-document and merge
 
-1. Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, to run **Self-Document** in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the cell's `INVENTORY.md`. Set `CONTRACT.md` status to `satisfied`.
+1. Spawn a sub-agent using the **cell-agent** agent, `--cell <concern.layer>`, to run [Self-Documenting](../../agents/cell-agent/actions/self-documenting.md) in the main tree: set the `CONTRACT.md` `Source` pointer(s) to the resolved host path(s), write/update `USAGE.md`, append `CHANGELOG.md`, regenerate this item's `REFERENCES.md` and the cell's `INVENTORY.md`. Set `CONTRACT.md` status to `satisfied`.
 2. Merge into the request branch: `git checkout request/<slug> && git merge attempt/<slug>-<cell>-<item-slug>-<NNN> --no-ff -m "item(<cell>/<item-slug>): merge attempt-<NNN>"`. Return to the original branch: `git checkout -`.
 3. Remove the worktree: `git worktree remove .worktrees/attempt-<slug>-<cell>-<item-slug>-<NNN>`. Delete the attempt branch: `git branch -d attempt/<slug>-<cell>-<item-slug>-<NNN>`.
 4. Mark this item complete; if any other item was waiting on this one as a dependency and now has all dependencies satisfied, it becomes eligible for the current or next wave.
@@ -138,7 +138,7 @@ If any items are BLOCKED, list them and use `AskUserQuestion` to pause: "Some it
 
 - Never run a request whose `plan.md` status is not `approved`.
 - Never dispatch a cell-agent without `--cell`.
-- Never skip Fidelity Review — an attempt is never marked passed without it.
+- Never skip Reviewing Fidelity — an attempt is never marked passed without it.
 - Never infer the changed file list from cell-agent output — always derive from `git status --short` in the worktree.
 - Never write an attempt file, or any `.claude/trellis/` framework artefact, inside a worktree — always the main tree.
 - Never merge a passing attempt into `main` — the request branch only.
